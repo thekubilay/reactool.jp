@@ -3,14 +3,13 @@
     <v-card width="100%" max-width="900px" height="600px" max-height="600px">
       <div class="result__wrapper d-flex align-center px-10">
         <h2 class="vw100 font-weight-regular d-flex align-center justify-space-around">
-          <span class="d-flex align-center" v-if="get_selected_room != null">{{this.get_selected_room.room != null ? this.get_selected_room.room+" 号室の場合" : ""}}</span>
-          <div class="d-flex align-center"><span class="d-flex align-center">月々返済額</span><span class="d-flex align-center price--txt">50,000 円</span></div>
+          <div class="d-flex align-center"><span class="d-flex align-center">月々返済額</span><span class="d-flex align-center price--txt">{{monthReturnAmountM}} 万円</span></div>
         </h2>
       </div>
       <div class="sliders__wrapper px-10">
         <div class="slider--content--wrapper" v-for="(item, index) in sliders" :key="index">
           <div class="txt--wrapper d-flex"><v-icon class="mr-3" :color="item.color" large>{{item.icon}}</v-icon><h4>{{item.name}}</h4></div>
-          <div class="input--wrapper d-flex"><input type="text" v-model.number="item.model" class="mr-3"><h4>{{item.type}}</h4></div>
+          <div class="input--wrapper d-flex"><input type="text" v-model="item.model" class="mr-3"><h4>{{item.type}}</h4></div>
           <div class="slider--wrapper d-flex align-center">
             <vue-slider v-model="item.model" v-bind="item.options" />
           </div>
@@ -23,18 +22,19 @@
 import { mapGetters } from 'vuex'
 import VueSlider from 'vue-slider-component'
 import 'vue-slider-component/theme/default.css'
+import BigNumber from "bignumber.js";
 export default {
   components: {
     VueSlider
   },
-  data(){
+    data(){
     return {
       isInputActive: false,
       sliders: [
         {
           icon: "mdi-office-building-outline",
           name: "物件価格",
-          model: 40000000,
+          model: 4000,
           color:"blue",
           type: "万円",
           options: {
@@ -42,7 +42,7 @@ export default {
             width: '100%',
             height: 8,
             min: 0,
-            max: 100000000,
+            max: 10000,
             tooltip: 'none',
             railStyle: {backgroundColor: 'gray' },
             processStyle: {backgroundColor: 'blue' },
@@ -51,7 +51,7 @@ export default {
         {
           icon: "mdi-trending-up",
           name: "金利",
-          model: 0.1,
+          model: 0.001,
           color:"orange",
           type: "%",
           options: {
@@ -59,16 +59,18 @@ export default {
             width: '100%',
             height: 8,
             min: 0,
-            max: 10,
+            max: 1,
+            interval: 0.001,
+            formatter: (val) => val/1000,
             tooltip: 'none',
             railStyle: {backgroundColor: 'gray' },
             processStyle: {backgroundColor: 'orange' },
-          },          
+          },       
         },
         {
           icon: "mdi-cash",
           name: "頭金",
-          model: 300000,
+          model: 300,
           color:"red",
           type: "万円",
           options: {
@@ -76,16 +78,16 @@ export default {
             width: '100%',
             height: 8,
             min: 0,
-            max: 100000000,
+            max: 1000,
             tooltip: 'none',
             railStyle: {backgroundColor: 'gray' },
             processStyle: {backgroundColor: 'red' },
-          },          
+          },    
         },
         {
           icon: "mdi-cash-multiple",
           name: "ボーナス支払い",
-          model: 300000,
+          model: 100,
           color:"green" ,
           type: "万円",
           options: {
@@ -93,16 +95,16 @@ export default {
             width: '100%',
             height: 8,
             min: 0,
-            max: 500000,
+            max: 500,
             tooltip: 'none',
             railStyle: {backgroundColor: 'gray' },
             processStyle: {backgroundColor: 'green' },
-          },    
+          },   
         },
         {
           icon: "mdi-clock-time-five-outline",
           name: "返済時間",
-          model: 30,
+          model: 1,
           color:"purple",
           type: "年",
           options: {
@@ -110,16 +112,24 @@ export default {
             width: '100%',
             height: 8,
             min: 0,
-            max: 50,
+            max: 40,
             tooltip: 'none',
             railStyle: {backgroundColor: 'gray' },
             processStyle: {backgroundColor: 'purple' },
           },
         },
-      ]
+      ],
+      monthReturnAmountM:"",
+      bukkenPrice:"",
+      kinri:"",
+      kinri_decimal:"",
+      atamakin:"",
+      bonusPay:"",
+      hensaiPeriod:"",
     }
   },
   mounted(){
+    this.reCalcurateM(this.sliders)
     if (this.get_selected_room != null && this.get_selected_room.price != null){
       let index = ""
       this.sliders.forEach((element, i) => {
@@ -131,11 +141,7 @@ export default {
     }
   },
   computed: {
-    ...mapGetters([
-      "get_selected_room",
-    ]),
     result(){
-
       let result = this.thePMT()
       return ""
     },
@@ -160,34 +166,94 @@ export default {
       }
     }
   },
-  methods: {
-    thePMT(ir, np, pv, fv, type) {
-      /*
-      * ir   - interest rate per month
-      * np   - number of periods (months)
-      * pv   - present value
-      * fv   - future value
-      * type - when the payments are due:
-      *        0: end of the period, e.g. end of month (default)
-      *        1: beginning of period
-      */
-      var pmt, pvif;
-
-      fv || (fv = 0);
-      type || (type = 0);
-
-      if (ir === 0)
-          return -(pv + fv)/np;
-
-      pvif = Math.pow(1 + ir, np);
-      pmt = - ir * pv * (pvif + fv) / (pvif - 1);
-
-      if (type === 1)
-          pmt /= (1 + ir);
-
-      return pmt;
+  watch:{
+    finance_decimal:function(val){
+      this.modelFilter_push(val.model,this.sliders, "金利");
+    },
+    sliders:{
+      handler:function(val){
+        this.reCalcurateM(val);
+      },
+      deep:true,
     }
-  },  
+  },
+  methods: {
+
+    modelFilter: function(array, str){
+      return array.filter(item => {
+        return item.name == str
+      })
+    },
+    modelFilter_push: function(val, array, str){
+       let arr = array.filter(item => {
+        return item.name == str
+      })
+      arr[0].model = val
+      // console.log(arr[0].model);
+    },
+    lengthCheck: function(targetName, number, maxLength) {
+        var count = number.toString().length;
+        var rtnNumber = new BigNumber(0);
+
+        if (count > maxLength) {
+            var rtnNumber = new BigNumber(number.toString().substr(0, maxLength));
+            targetName =rtnNumber
+            return rtnNumber;
+        }
+        return number;
+    },
+      
+    // 月々支払額算出関数
+    reCalcurateM: function(val) {
+      
+      this.bukkenPrice = this.modelFilter(val, "物件価格")[0];
+      this.kinri = this.modelFilter(val, "金利")[0];
+      this.atamakin = this.modelFilter(val, "頭金")[0];
+      this.bonusPay = this.modelFilter(val, "ボーナス支払い")[0];
+      this.hensaiPeriod = this.modelFilter(val, "返済時間")[0];
+
+
+      // 借入希望価格(a)
+      let purchaseRequestPrice = new BigNumber(this.bukkenPrice.model);
+      // // // ローン金利(d)
+      let finance = new BigNumber(this.kinri.model);
+      // let finance_decimal = finance.times(0.01).toNumber();
+      // // // 頭金
+      let atamakin = new BigNumber(this.atamakin.model);
+      // // // ボーナス返済額（1回分）(b)
+      let bAmt = new BigNumber(this.bonusPay.model);
+      // // // 返済期間(c)
+      let payBackPeriod = new BigNumber(this.hensaiPeriod.model);
+
+      // 頭金を借入金額から引いておく
+      purchaseRequestPrice = new BigNumber(purchaseRequestPrice - atamakin);
+        // this.kinri_decimal = new BigNumber(this.kinri).times(0.01).toNumber();
+
+        var culc1 = finance.div(new BigNumber(10)).div(new BigNumber(2));
+        console.log(culc1);
+        var culc2 = finance.div(new BigNumber(10)).div(new BigNumber(12));
+        console.log(culc2);
+        var culc3 = payBackPeriod.times(new BigNumber(12));
+        console.log(culc3);
+        var culc4 = (culc2.plus(new BigNumber(1))).exponentiatedBy(culc3);
+        console.log(culc4);
+
+        // ボーナスで返済する借入金額 
+        var returnAmountBonus = (bAmt.times((culc1.plus(new BigNumber(1))).exponentiatedBy(payBackPeriod.times(new BigNumber(2))).minus(new BigNumber(1)))).div(culc1.times((culc1.plus(new BigNumber(1))).exponentiatedBy(payBackPeriod.times(new BigNumber(2)))));
+        var culc5 = ((purchaseRequestPrice.minus(returnAmountBonus)).times(culc2).times(culc4));
+        // 月々支払額 x=((a-((b*((1+d/100/2)^(c*2)-1))/((d/100/2)*(1+d/100/2)^(c*2))))*(d/100/12)*((1+d/100/12)^(12*c)))/(((1+d/100/12)^(12*c))-1)
+        var monthReturnAmount = ((purchaseRequestPrice.minus(returnAmountBonus)).times(culc2).times(culc4)).div(culc4.minus(new BigNumber(1)));
+        if (monthReturnAmount.isNaN()) {
+            monthReturnAmount = new BigNumber(0);
+        }
+        // 最終的にマイナス値の場合は0で返却
+        if (monthReturnAmount.comparedTo(new BigNumber(0)) < 0) {
+            monthReturnAmount = new BigNumber(0);
+        }
+        // 月々支払額は小数第三位を切り上げ
+         this.monthReturnAmountM = monthReturnAmount.dp(1, BigNumber.ROUND_UP)
+    }
+  }
 }
 </script>
 <style>

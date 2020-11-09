@@ -28,6 +28,7 @@ export default {
   width: 100%;
   list-style: none;
   align-content: flex-start;
+  align-items: flex-start;
 }
 .files-file {
   max-width: 300px;
