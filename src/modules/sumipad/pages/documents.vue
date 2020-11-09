@@ -3,7 +3,8 @@
     <ul class="files d-flex flex-wrap scrollable">
       <li class="files-file" v-for="(item, index) in get_project.documents" :key="index">
         <a :href="item.pdf" target="_blank">
-          <figure class="files-file-img d-flex justify-center py-2"><img class="mx-auto pdf__img" :src="item.image"></figure>
+          <figure class="files-file-img d-flex justify-center py-2">
+            <img class="mx-auto pdf__img" :src="DIR+item.image"></figure>            
           <p class="files-file-txt">{{ item.name }}</p>
         </a>  
       </li>
@@ -11,8 +12,10 @@
   </v-sheet>
 </template>
 <script>
+import {basicMixin} from '@/mixins/basicMixin'
 import { mapGetters } from 'vuex'
 export default {
+  mixins:[basicMixin],
   computed: {
     ...mapGetters([
       "get_project",

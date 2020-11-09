@@ -29,7 +29,7 @@
 
     <v-card class="my-10 botton_content_wrapper text-center py-4 ma-0" width="38%" v-if="plan != null">
       <img :src="DIR+plan.image" @click="setImage(plan.image)" class="side--img">
-      <v-card color="#f1f2f6" class="mx-auto d-flex py-2 px-4 plan-card pointer text-left" max-width="350px">   
+      <v-card color="#f1f2f6" class="mx-auto d-flex py-2 px-4 plan-card pointer text-left" max-width="350px" @click="toLoanWithSelectedRoom(plan)">   
         <div>
           <h5 class="display-1 font-weight-bold mr-2">{{plan.type}}<span class="ml-1 body-2">type</span></h5>
           <h6 class="title">{{plan.menu}}</h6>
