@@ -10,7 +10,18 @@
 import appHeader from '../components/header'
 import appForm from "../components/form"
 import projectList from '../components/project-list'
+import { mapGetters } from 'vuex'
 export default { 
   components:{appHeader, appForm, projectList},
+  mounted(){
+    if (this.get_token) {
+      this.$store.dispatch("LOAD_PROJECTS")      
+    }
+  },
+  computed: {
+    ...mapGetters([
+      "get_token"
+    ])
+  },
 }
 </script>
