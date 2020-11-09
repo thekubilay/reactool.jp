@@ -114,7 +114,6 @@
     },  
     watch: {
       get_project(val){
-        console.log(val)
         this.findPlan()
         this.findCompares()
       },
@@ -148,10 +147,16 @@
         this.dialog = true
       },
       findPlan() {
-        const plan = this.get_project.plans.filter(element => {
+        let plan = this.get_project.plans.filter(element => {
           return element.id == this.$route.params.planId
         });
-        this.plan_detail = plan[0]
+        let unitObj = this.get_project.units.filter(element => {
+          return element.id == plan[0].id
+        });
+        let unit = unitObj[0]
+            unit.image = plan[0].image
+        
+        this.plan_detail = unit
         this.plan = plan[0].id
       },
       findCompares() {

@@ -90,8 +90,8 @@ export default {
       const plan = this.get_project.plans.filter(element => {
         return element.type == obj.type && element.menu == obj.menu
       });
-      this.plan = plan[0]
-      console.log(this.plan)
+      this.plan = obj
+      this.plan.image = plan[0].image
     },
     priceShort(price){
       if (price != null) {
