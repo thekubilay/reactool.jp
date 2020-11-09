@@ -18,6 +18,9 @@ export default {
       DIR: process.env.VUE_APP_MEDIA_URL,
     }
   },
+  mounted(){
+    this.loadFrontEndProject()
+  },  
   created(){
     if (this.get_project_load != 2) {
       this.loadFrontEndProject()

@@ -34,13 +34,20 @@ export const formMixer = {
       } else {
         form.forEach(item => {
           item.content.forEach(el => {
-            el.model = ""
+            if (el.name == "file" || el.name == "file") {
+              el.model = null
+            } else {
+              el.model = ""
+            }
           })
         })
         return form.filter(item => {
           return item.form_name == statusForm.form_name
         }) 
       }
+    },
+    removeFormData(dispatch, obj){
+      this.$store.dispatch(dispatch, obj)
     }
   },
   data(){

@@ -30,8 +30,6 @@
     <card-document :card="card" :loading="loading"></card-document>
     <!-- card UNIT -->
     <card-unit :card="card" :loading="loading" :units="get_project.units" :wide_floor="get_project.wide_floor" :floor_num="get_project.floor"></card-unit>
-
-
   </v-card>
 </template>
 <script>
@@ -87,13 +85,6 @@ export default {
       "get_project",
     ]),
   },
-  // methods: {    
-  //   remove(str, obj) {
-  //     this.$store.dispatch(str, {
-  //       id: obj.id
-  //     })
-  //   },
-  // },
 }
 </script>
 <style>

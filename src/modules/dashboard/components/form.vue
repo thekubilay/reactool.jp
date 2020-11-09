@@ -191,6 +191,7 @@ export default {
             }
           } else {
             // project avatar update
+            fd.append("image", obj["file"], obj["file"].name)
             fd.append("id", this.$route.params.id)            
           }
 

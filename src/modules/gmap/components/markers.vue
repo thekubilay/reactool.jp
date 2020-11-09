@@ -31,14 +31,11 @@ export default {
 	watch: {
 		map(){
 			this.initializeMarker()
+			this.markerFilter(this.get_selected_places, this.marker, this.map_marker)     
 		},
     map_markers() {},
     get_selected_places(val){
-      if(val.includes(this.marker.place)){
-        this.map_marker.setVisible(true)
-			} else {
-				this.map_marker.setVisible(false)
-      }
+			this.markerFilter(val, this.marker, this.map_marker)     
     },
     get_pointed_coord(val){
       if (val.id == this.marker.id) {
@@ -93,6 +90,13 @@ export default {
 				this.info_window.close()
 				this.info_window.open(this.map, this.map_marker);    
 			});
+		},
+		markerFilter(val, marker, settedMarker){
+			if(val.includes(marker.place)){
+        settedMarker.setVisible(true)
+			} else {
+				settedMarker.setVisible(false)
+      }
 		}
 	},
 	render() {},
