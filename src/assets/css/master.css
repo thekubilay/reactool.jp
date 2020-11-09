@@ -1,0 +1,60 @@
+html, body {
+  position: fixed;
+  width: 100%;
+  height: calc(100vh - 62px) !important;
+}
+.wh100raw {
+  height: 100vh;
+}
+.wh100 {
+  height: calc(100vh - 62px) !important;
+}
+.ww100per {
+  width: 100%;
+}
+.ww100 {
+  width: 100%;
+}
+.hw100per {
+  height: 100%;
+}
+.vw50 {
+  width: 50%;
+}
+.hw50 {
+  height: 50%;
+}
+.scrollable { height:100%; overflow:auto;}
+
+.oddeven:nth-child(even) {background: #f5f6fa}
+.oddeven:nth-child(odd) {background: #FFF}
+
+.fixed {
+  width: 100%;
+  z-index: 99;
+  position: fixed !important;
+}
+.pointer {
+  cursor: pointer;
+}
+.rel {
+  position: relative;
+}
+.bg--color {
+  background: #f5f6fa !important;
+  background-color: #f5f6fa !important;
+}
+.bg--white {
+  background: white;
+  background-color: white;
+}
+
+.sm--txt {
+  font-size: 13px;
+}
+.xsm--txt {
+  font-size: 12px;
+}
+.xxsm--txt {
+  font-size: 11px;
+}

@@ -1,32 +1,44 @@
 <template>
-  <div id="app">
-    <div id="nav">
-      <router-link to="/">Home</router-link> |
-      <router-link to="/about">About</router-link>
-    </div>
-    <router-view/>
-  </div>
+  <v-app>
+    <v-main>
+      <router-view class="bg--color"></router-view>
+      <bottom-navigation v-if="this.$route.name != 'projects' && this.$route.name != 'project' && this.$route.name != 'login'"></bottom-navigation>
+    </v-main>
+  </v-app>
 </template>
-
+<script>
+import {mapGetters} from 'vuex'
+import bottomNavigation from './modules/sumipad/components/bottom-navigation'
+export default {
+  name: 'App',
+  components:{bottomNavigation,},
+  created(){    
+    if (window.location.href.split("/")[4] != "projects" && 
+        window.location.href.split("/")[4] != "project" && 
+        window.location.href.split("/")[4] != "login" && 
+        window.location.href.split("/")[4] != "") {
+      this.$route.params.slug = window.location.href.split("/")[4]
+      this.$store.dispatch("RETRIEVE_PROJECT", {pid:window.location.href.split("/")[4]})      
+    } else {
+      this.$route.params.slug = "dummy"
+      if (this.get_token) {
+        const payload = null
+        this.$store.dispatch("LOAD_USER", payload)      
+        this.$store.dispatch("LOAD_PROJECTS")      
+        if(this.$route.name == "users"){
+          this.$store.dispatch("LOAD_USERS")      
+        }
+      }  
+    }    
+  },
+  computed:{
+    ...mapGetters([
+      "get_token",
+    ]),
+  },
+}
+</script>
 <style>
-#app {
-  font-family: Avenir, Helvetica, Arial, sans-serif;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
-  text-align: center;
-  color: #2c3e50;
-}
-
-#nav {
-  padding: 30px;
-}
-
-#nav a {
-  font-weight: bold;
-  color: #2c3e50;
-}
-
-#nav a.router-link-exact-active {
-  color: #42b983;
-}
+@import "./assets/css/master.css";
+@import "./assets/css/unit.css";
 </style>
