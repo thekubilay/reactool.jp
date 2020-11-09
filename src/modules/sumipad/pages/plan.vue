@@ -46,7 +46,7 @@
           <div class="mx-5">
             <p class="sm--txt mb-0 mt-2"><span class="dt">間取り:</span> {{plan_detail.room_plan}}</p>          
             <p class="sm--txt mb-0 mt-1"><span class="pr-4 ">広さ:</span> {{defaultSep(plan_detail.room_m2)}}㎡</p>          
-            <p class="sm--txt mb-0 mt-1"><span class="pr-4 ">価格:</span> {{defaultSep(plan_detail.price)}}㎡</p>  
+            <p class="sm--txt mb-0 mt-1"><span class="pr-4 ">価格:</span> {{defaultSep(plan_detail.price)}}円</p>  
           </div>                  
           <v-card-actions class="pa-0">
             <v-btn
@@ -68,9 +68,9 @@
             <v-divider></v-divider>
           </div>
           <div class="mx-5">
-            <p class="sm--txt mb-0 mt-2"><span class="dt">間取り:</span> {{plan_detail.room_plan}}</p>          
-            <p class="sm--txt mb-0 mt-1"><span class="pr-4 ">広さ:</span> {{defaultSep(plan_detail.room_m2)}}㎡</p>          
-            <p class="sm--txt mb-0 mt-1"><span class="pr-4 ">価格:</span> {{defaultSep(plan_detail.price)}}㎡</p>  
+            <p class="sm--txt mb-0 mt-2"><span class="dt">間取り:</span> {{compare_detail.room_plan}}</p>          
+            <p class="sm--txt mb-0 mt-1"><span class="pr-4 ">広さ:</span> {{defaultSep(compare_detail.room_m2)}}㎡</p>          
+            <p class="sm--txt mb-0 mt-1"><span class="pr-4 ">価格:</span> {{defaultSep(compare_detail.price)}}円</p>  
           </div>                  
           <v-card-actions class="pa-0">
             <v-btn
@@ -118,10 +118,19 @@
         this.findCompares()
       },
       selected_compare(val) {
-        const plan = this.get_project.plans.filter(element => {
+        let project = JSON.parse(JSON.stringify(this.get_project))
+        let plan = project.plans.filter(element => {
           return element.id == val
         });
-        this.compare_detail = plan[0]
+        let unitObj = null
+        project.units.forEach(element => {
+          if (element.type == plan[0].type) {
+            unitObj = element
+          }           
+        });
+
+        unitObj.image = plan[0].image
+        this.compare_detail = unitObj
       },
       plan(val) {
         if (this.$route.params.planId != val) {
@@ -151,8 +160,9 @@
           return element.id == this.$route.params.planId
         });
         let unitObj = this.get_project.units.filter(element => {
-          return element.id == plan[0].id
+          return element.type == plan[0].type
         });
+
         let unit = unitObj[0]
             unit.image = plan[0].image
         

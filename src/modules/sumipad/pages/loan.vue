@@ -3,7 +3,7 @@
     <v-card width="100%" max-width="900px" height="600px" max-height="600px">
       <div class="result__wrapper d-flex align-center px-10">
         <h2 class="vw100 font-weight-regular d-flex align-center justify-space-around">
-          <div class="d-flex align-center"><span class="d-flex align-center">月々返済額</span><span class="d-flex align-center price--txt">{{monthReturnAmountM}} 万円</span></div>
+          <div class="d-flex align-center"><span class="d-flex align-center">{{room != null && room.room != null ? room.room : ""}}月々返済額</span><span class="d-flex align-center price--txt">{{monthReturnAmountM}} 万円</span></div>
         </h2>
       </div>
       <div class="sliders__wrapper px-10">
@@ -126,44 +126,40 @@ export default {
       atamakin:"",
       bonusPay:"",
       hensaiPeriod:"",
+      room:null,
     }
   },
   mounted(){
     this.reCalcurateM(this.sliders)
     if (this.get_selected_room != null && this.get_selected_room.price != null){
+
+      localStorage.setItem("roomObj", JSON.stringify(this.get_selected_room))
       let index = ""
       this.sliders.forEach((element, i) => {
         if (element.name == "物件価格") {
           index = i
         }
       });
-      this.sliders[index].model = this.get_selected_room.price
-    }
-  },
-  computed: {
-    result(){
-      let result = this.thePMT()
-      return ""
-    },
-    model: {
-      get: function() {
-        if (this.isInputActive) {
-            return this.value.toString()
-        } else {
-            return this.value.toFixed(2).replace(/(\d)(?=(\d{3})+(?:\.\d+)?$)/g, "1,")
-        }
-      },
-      set: function(modifiedValue) {
-        // Recalculate value after ignoring "$" and "," in user input
-        let newValue = parseFloat(modifiedValue.replace(/[^\d\.]/g, ""))
-        // Ensure that it is not NaN
-        if (isNaN(newValue)) {
-            newValue = 0
-        }
-        // Note: we cannot set this.value as it is a "prop". It needs to be passed to parent component
-        // $emit the event so that parent component gets it
-        this.$emit('input', newValue)
+      let room = JSON.parse(localStorage.getItem("roomObj"))
+      let price = room.price+""
+      this.sliders[index].model = price.substring(0,4)
+    } else {
+      if (localStorage.getItem("price")) {
+        let index = ""
+        this.sliders.forEach((element, i) => {
+          if (element.name == "物件価格") {
+            index = i
+          }
+        });
+
+
+        let room = JSON.parse(localStorage.getItem("roomObj"))
+        let price = room.price+""
+        this.sliders[index].model = price.substring(0,4)
+        this.room = room
+
       }
+    
     }
   },
   watch:{
@@ -177,6 +173,9 @@ export default {
       deep:true,
     }
   },
+  computed: {
+    ...mapGetters(["get_selected_room"]),
+  },
   methods: {
 
     modelFilter: function(array, str){
@@ -189,7 +188,6 @@ export default {
         return item.name == str
       })
       arr[0].model = val
-      // console.log(arr[0].model);
     },
     lengthCheck: function(targetName, number, maxLength) {
         var count = number.toString().length;
@@ -230,13 +228,9 @@ export default {
         // this.kinri_decimal = new BigNumber(this.kinri).times(0.01).toNumber();
 
         var culc1 = finance.div(new BigNumber(10)).div(new BigNumber(2));
-        console.log(culc1);
         var culc2 = finance.div(new BigNumber(10)).div(new BigNumber(12));
-        console.log(culc2);
         var culc3 = payBackPeriod.times(new BigNumber(12));
-        console.log(culc3);
         var culc4 = (culc2.plus(new BigNumber(1))).exponentiatedBy(culc3);
-        console.log(culc4);
 
         // ボーナスで返済する借入金額 
         var returnAmountBonus = (bAmt.times((culc1.plus(new BigNumber(1))).exponentiatedBy(payBackPeriod.times(new BigNumber(2))).minus(new BigNumber(1)))).div(culc1.times((culc1.plus(new BigNumber(1))).exponentiatedBy(payBackPeriod.times(new BigNumber(2)))));
