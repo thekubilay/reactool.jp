@@ -29,19 +29,21 @@
 
     <v-card class="my-10 botton_content_wrapper text-center py-4 ma-0" width="38%" v-if="plan != null">
       <img :src="DIR+plan.image" @click="setImage(plan.image)" class="side--img">
-      <v-card color="#f1f2f6" class="mx-auto d-flex py-2 px-4 plan-card pointer text-left" max-width="350px" @click="toLoanWithSelectedRoom(plan)">   
-        <div>
-          <h5 class="display-1 font-weight-bold mr-2">{{plan.type}}<span class="ml-1 body-2">type</span></h5>
-          <h6 class="title">{{plan.menu}}</h6>
-          <v-divider></v-divider>
-        </div>
-        <div class="mx-5">
-          <p class="sm--txt mb-0 mt-2"><span class="dt">間取り:</span> {{plan.room_plan}}</p>          
-          <p class="sm--txt mb-0 mt-1"><span class="pr-4 ">広さ:</span> {{defaultSep(plan.room_m2)}}㎡</p>          
-          <p class="sm--txt mb-0 mt-1"><span class="pr-4 ">価格:</span> {{defaultSep(plan.price)}}㎡</p>  
-        </div>                  
-        <v-card-actions class="pa-0">
+      <v-card color="#f1f2f6" class="mx-auto d-flex flex-column py-2 px-4 plan-card text-left" :class="{pointer:plan.status == '販売中' || plan.status == '商談中'}" max-width="270px" @click="toLoanWithSelectedRoom(plan)">   
+        <div class="d-flex align-center mb-2">
+          <div>
+            <h5 class="display-1 font-weight-bold mr-2">{{plan.type}}<span class="ml-1 body-2">type</span></h5>
+            <h6 class="title">{{plan.menu}}</h6>
+          </div>
+          <div class="mx-5">
+            <p class="sm--txt mb-0 mt-2"><span class="dt">間取り:</span> {{plan.room_plan}}</p>          
+            <p class="sm--txt mb-0 mt-1"><span class="pr-4 ">広さ:</span> {{defaultSep(plan.room_m2)}}㎡</p>          
+            <p class="sm--txt mb-0 mt-1" v-if="plan.status == '販売中' || plan.status == '商談中'"><span class="pr-4 ">価格:</span> {{defaultSep(plan.price)}}㎡</p>  
+          </div>    
+        </div>              
+        <v-card-actions class="pa-0" v-if="plan.status == '販売中' || plan.status == '商談中'">
           <v-btn
+          width="100%"
             outlined
             text
           >
@@ -103,7 +105,9 @@ export default {
     },
     toLoanWithSelectedRoom(val){
       this.$store.dispatch("UPDATE_SELECTED_ROOM", {price:val.price, room: val.type+" "+val.room_number})
-      this.$router.push({name:'loan'})
+      if (val.status == '販売中' || val.status == '商談中') {
+        this.$router.push({name:'loan'})        
+      }
     }
   },
 }
@@ -112,7 +116,7 @@ export default {
 /* side img */
 img.side--img {
   width: 85%;
-  height: calc(100% - 100px);
+  height: calc(100% - 142px);
 }
 
 .botton_content_wrapper > .detail__content {

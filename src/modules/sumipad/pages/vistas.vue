@@ -1,11 +1,8 @@
 <template>
-  <v-sheet v-pan="onPan" width="ww100" class="noselect d-flex align-center wh100" v-if="get_project_load == 2">
+  <v-sheet v-pan="onPan" width="ww100" class="noselect d-flex align-center wh100 pan" v-if="get_project_load == 2">
+    <p class="compass">{{compass}}</p>
     <app-vista-controller />
-    <!-- <p class="transform">{{transform}}</p> -->
-    <div class="vista__img" v-if="get_project.vistas.length" ref="list" :style="{ backgroundImage: 'url(' + DIR+vistas.image + ')' }"></div>
-    <h1 class="ww100 text-center mx-auto text-center d-flex align-center black--text justify-center" v-else>眺望画像が登録されていない</h1>   
-    <button v-longclick="() => buttonLeft(-15)" class="left-btn"><i class="fas fa-chevron-left"></i></button>
-    <button v-longclick="() => buttonLeft(15)" class="right-btn"><i class="fas fa-chevron-right"></i></button>
+    <div class="slider__list" ref="list" :style="{ backgroundImage: 'url(' + DIR+vistas.image + ')' }"></div> 
   </v-sheet>
 </template>
 <script>
@@ -23,7 +20,9 @@ export default {
     pan: {
       bind: function(el, binding) {
         if (typeof binding.value === "function") {
-          const mc = new Hammer(el);
+          const mc = new Hammer(el);          
+          mc.options.domEvents = true
+          mc.options.preventDefault = true
           mc.get("pan").set({ direction: Hammer.DIRECTION_ALL });
           mc.on("pan", binding.value);
         }
@@ -33,17 +32,19 @@ export default {
   mixins:[basicMixin],
   data(){
     return {
-      position: null,
-      currentOffset: 0,      
-      selected: null,
-      transform: null
+      position:0,
+      compass_change: false,
+      currentOffset: 0,
+      compass: "東",
+      counter: 0,
+      watchPos: null,
     }
   },
   computed: {
     ...mapGetters([
-      "get_project",
       "get_project_load",
-      "get_current_vista",
+      "get_project",
+      "get_current_vista"
     ]),
     vistas(){
       let images = this.get_project.vistas
@@ -52,28 +53,40 @@ export default {
       })
       return image[0]
     },
-    overflowRatio() {
+		overflowRatio() {
 			return this.$refs.list.scrollWidth / this.$refs.list.offsetWidth;
 		},
 		itemWidth() {
 			return this.$refs.list.scrollWidth;
+		},
+		count() {
+			return 1
     },
   },
   watch: {
-
+    position(oldpos, newpos){
+      if (newpos < oldpos) {
+        this.compassActionRight(newpos)
+      } else {
+        this.compassActionLeft(newpos)
+      }
+    }
   },
-  methods: {
-    onPan(e) {
-			const dragOffset = -100 / this.itemWidth * e.deltaX /this.overflowRatio;
+	methods: {
+		onPan(e) {
+			const dragOffset = -100 / this.itemWidth * e.deltaX / this.count * this.overflowRatio;
 			const transform = this.currentOffset + dragOffset;
-
       this.$refs.list.style.setProperty("--x", transform);
-      this.transform = e.pointerType
-              
-      if (e.isFinal) {
+      this.transform = this.transform + transform
+
+      let style = getComputedStyle(this.$refs.list)
+      let pos = parseFloat(style.backgroundPosition.match(/.*?(?=p|$)/i)[0])
+      this.position = pos
+
+			if (e.isFinal) {
 				this.currentOffset = transform;
 				const maxScroll = 100 - this.overflowRatio * 100;
-        let finalOffset = this.currentOffset;
+				let finalOffset = this.currentOffset;
 
 				// scrolled to last item
 				if (this.currentOffset <= maxScroll) {
@@ -83,31 +96,59 @@ export default {
 					finalOffset = 0;
 				} else {
 					// animate to next item according to pan direction
-					const index = this.currentOffset / this.overflowRatio / 100 * 5;
+					const index = this.currentOffset / this.overflowRatio / 100 * this.count;
 					const nextIndex = e.deltaX <= 0 ? Math.floor(index) : Math.ceil(index);
 					finalOffset = 100 * this.overflowRatio / this.count * nextIndex;
-        }		      
+				}
       }
     },
-    buttonLeft(pos){
-      let style = getComputedStyle(this.$refs.list)
-      this.position = parseFloat(style.backgroundPosition.match(/.*?(?=p|$)/i)[0])
-      this.position = this.position + pos
-			this.$refs.list.style.setProperty("--x", this.position);
+    compassActionRight(position){
+      let pos = position
+      pos = parseInt(pos)
+
+      const dirs = ["東", "南", "西", "北"]
+      if (pos % 30 === 0) {
+        if (this.compass_change) {
+          if (this.counter < 3) {
+            this.counter+=1            
+          } else {
+            this.counter = 0
+          }
+          this.compass = dirs[this.counter]
+          this.compass_change = false
+        } 
+      } else {
+        this.compass_change = true
+      }  
     },
-    buttonRight(pos){
-      let style = getComputedStyle(this.$refs.list)
-      this.position = parseFloat(style.backgroundPosition.match(/.*?(?=p|$)/i)[0])
-      this.position = this.position + pos
-			this.$refs.list.style.setProperty("--x", this.position);    
-    },
-  }
+    compassActionLeft(position){
+      let pos = position
+      pos = parseInt(pos)
+
+      const dirs = ["東", "南", "西", "北"]
+      if (pos % 30 === 0) {
+        if (this.compass_change) {
+          if (this.counter > 0) {
+            this.counter -= 1            
+          } else {
+            this.counter = 3
+          }
+          this.compass = dirs[this.counter]
+          this.compass_change = false
+        } 
+      } else {
+        this.compass_change = true
+      }
+
+      
+    }
+	}
 }
 </script>
 <style>
 p.compass {
   position: absolute;
-  top: 50px;
+  top: 40px;
   right: 100px;
   z-index: 9999;
   background: white;
@@ -116,53 +157,19 @@ p.compass {
   font-weight: 600;
   border-radius: 8px;
 }
-
-/* swipter */
-.vista__img {
-  height: 100%;
-  width: 100%;
-  pointer-events: none;
-  background-size: cover;
+.pan {
   background-repeat: repeat-x;
-  /* background-position: -400px center; */
-  background-position: calc(var(--x, center) * 1%);
-  transition: 1.3s ease;
-  /* transform: translateX(calc(var(--x, 0) * 1%)); */
+}
+.slider__list {
+  display: -webkit-box;
+  display: flex;
+  width: 100%;
+  background-size: cover;
+  height: 100%;
+  background-repeat: repeat-x;
+  -webkit-backface-visibility: hidden;
+          backface-visibility: hidden;
+  background-position-x: calc(var(--x, 0) * 1%);
 }
 
-.left-btn,
-.right-btn {
-  position: absolute;
-  height: 100%;
-  width: 60px;
-  background: rgba(255, 255, 255, 0.479);
-  outline: 0;
-  border: 0;
-  padding-bottom: 56px;
-}
-.left-btn .fa-chevron-left,
-.right-btn .fa-chevron-right {
-  font-size: 27px;
-  position: relative;
-}
-.left-btn {
-  top: 0;
-  left: 0;
-}
-.right-btn {
-  top: 0;
-  right: 0;
-}
-  
-.transform {
-  position: absolute;
-  top: 200px;
-  left: 50%;
-  transform: translateX(-50%);
-  background: white;
-  color: black;
-  margin-bottom: 0 !important;
-  padding: 10px 20px;
-  z-index: 99999999;
-}
 </style>
