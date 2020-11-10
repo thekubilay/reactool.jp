@@ -76,7 +76,7 @@ export default {
   },
 	methods: {
 		onPan(e) {
-      let dragSpeed = -15
+      let dragSpeed = -22
       if (parseInt(e.velocityX) > 1 || parseInt(e.velocityX) < -1) {
         this.$refs.list.style.transition = "1s ease"
         dragSpeed = -100
