@@ -224,7 +224,8 @@ export default {
           obj.project = this.$route.params.id
           this.$store.dispatch(form[0].dispatch, obj)
         }
-
+        // close form dialog
+        this.dialog = false
       }
     },
     remove(dispatch, id){

@@ -1,0 +1,9 @@
+@media screen and (max-width: 840px) {
+  .cards--wrapper {
+    display: block !important;
+    flex-wrap: unset;
+  }
+  .project--card {
+    width: 100% !important;
+  }
+}

@@ -41,4 +41,5 @@ export default {
 <style>
 @import "./assets/css/master.css";
 @import "./assets/css/unit.css";
+@import "./assets/css/media.css";
 </style>

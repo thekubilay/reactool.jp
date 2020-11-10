@@ -1,5 +1,5 @@
 <template>
-  <v-card ref="card" :loading="loading" width="48%" height="424px" class="mx-2 my-3 rounded-lg">
+  <v-card ref="card" :loading="loading" width="48%" height="424px" class="project--card mx-2 my-3 rounded-lg">
 
     <!-- progress loading -->
     <template slot="progress">
