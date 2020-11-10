@@ -1,7 +1,7 @@
 <template>
-  <v-sheet class="pb-14" height="100vh" width="100%" color="#f5f6fa" v-if="get_project != null">
+  <v-sheet class="pb-14" height="100vh" width="100%" color="#f5f6fa"  v-if="get_project != null">
     <ul class="files d-flex flex-wrap scrollable">
-      <li class="files-file" v-for="(item, index) in get_project.documents" :key="index">
+      <li class="files-file" v-for="(item, index) in pdfChecker(get_project.documents)" :key="index">
         <a :href="DIR+item.pdf" target="_blank">
           <figure class="files-file-img d-flex justify-center py-2">
             <div class="bg-doc-img" :class="{active: item.image !== null}" :style="{backgroundImage: 'url('+ nullChecker(item.image) +')'}"></div>
@@ -22,6 +22,9 @@ export default {
       "get_project",
     ])
   },
+  // mounted(){
+  //   console.log(get_project.documents)
+  // },
   methods : {
     nullChecker(image){
       if (image == null) {
@@ -33,6 +36,11 @@ export default {
     noImage(element){
       element.target.src = require('../../../assets/images/documents/pdf_dummy.png');
       return
+    },
+    pdfChecker: function(array){
+      return array.filter(item => {
+        return item.pdf !== null
+      })
     },
   }
 }
@@ -71,13 +79,14 @@ export default {
   padding-bottom: 20px;
 }
 .bg-doc-img {
-    width: 90%;
-    height: 200px;
-    margin: 20px auto;
-    background-size: contain;
-    background-position: center;
+  width: 50%;
+  height: 200px;
+  margin: 20px auto;
+  background-size: contain;
+  background-position: center;
 }
 .bg-doc-img.active {
-    background-size: auto 100%;
+  width: 86%;
+  background-size: auto 100%;
 }
 </style>
