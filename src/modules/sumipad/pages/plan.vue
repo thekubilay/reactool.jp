@@ -37,7 +37,7 @@
     <v-container class="d-flex plan__wrapper" :class="{'justify-center': compare_detail == null}">
       <div class="detail__content__wrapper d-flex flex-column align-center justify-center hw100per" v-if="plan_detail != null">
         <img :src="DIR+plan_detail.image" @click="setImage(plan_detail.image)">
-        <v-card color="#f1f2f6" class="d-flex py-2 px-4 plan-card pointer ma-0" >      
+        <v-card color="#f1f2f6" class="d-flex py-2 px-4 plan-card ma-0" >      
           <div>
             <h5 class="display-1 font-weight-bold mr-2">{{plan_detail.type}}<span class="ml-1 body-2">type</span></h5>
             <h6 class="title">{{plan_detail.menu}}</h6>
@@ -61,7 +61,7 @@
       <div class="detail__content__wrapper d-flex flex-column align-center justify-center hw100per"
         v-if="compare_detail != null">
         <img :src="DIR+compare_detail.image" @click="setImage(compare_detail.image)">
-        <v-card color="#f1f2f6" class="d-flex py-2 px-4 plan-card pointer ma-0" >   
+        <v-card color="#f1f2f6" class="d-flex py-2 px-4 plan-card ma-0" >   
           <div>
             <h5 class="display-1 font-weight-bold mr-2">{{compare_detail.type}}<span class="ml-1 body-2">type</span></h5>
             <h6 class="title">{{compare_detail.menu}}</h6>
