@@ -3,7 +3,7 @@
     <v-card width="100%" max-width="900px" height="600px" max-height="600px">
       <div class="result__wrapper d-flex align-center px-10">
         <h2 class="vw100 font-weight-regular d-flex align-center justify-space-around">
-          <div class="d-flex align-center"><span class="d-flex align-center">{{room != null && room.room != null ? room.room : ""}}月々返済額</span><span class="d-flex align-center price--txt">{{monthReturnAmountM}} 万円</span></div>
+          <div class="d-flex align-center"><span class="d-flex align-center">{{room != null ? room+" 室号 "+price+"万円 | "  : ""}}月々返済額</span><span class="d-flex align-center price--txt">{{monthReturnAmountM}} 万円</span></div>
         </h2>
       </div>
       <div class="sliders__wrapper px-10">
@@ -132,35 +132,17 @@ export default {
   mounted(){
     this.reCalcurateM(this.sliders)
     if (this.get_selected_room != null && this.get_selected_room.price != null){
-
-      localStorage.setItem("roomObj", JSON.stringify(this.get_selected_room))
       let index = ""
       this.sliders.forEach((element, i) => {
         if (element.name == "物件価格") {
           index = i
         }
       });
-      let room = JSON.parse(localStorage.getItem("roomObj"))
-      let price = room.price+""
+      let price = this.get_selected_room.price+""
+      this.room = this.get_selected_room.room
+      this.price = price.substring(0,4)
       this.sliders[index].model = price.substring(0,4)
-    } else {
-      if (localStorage.getItem("price")) {
-        let index = ""
-        this.sliders.forEach((element, i) => {
-          if (element.name == "物件価格") {
-            index = i
-          }
-        });
-
-
-        let room = JSON.parse(localStorage.getItem("roomObj"))
-        let price = room.price+""
-        this.sliders[index].model = price.substring(0,4)
-        this.room = room
-
-      }
-    
-    }
+    }     
   },
   watch:{
     finance_decimal:function(val){

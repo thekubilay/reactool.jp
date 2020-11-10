@@ -104,8 +104,8 @@ export default {
       }
     },
     toLoanWithSelectedRoom(val){
-      this.$store.dispatch("UPDATE_SELECTED_ROOM", {price:val.price, room: val.type+" "+val.room_number})
       if (val.status == '販売中' || val.status == '商談中') {
+        this.$store.dispatch("UPDATE_SELECTED_ROOM", {price:val.price, room: val.type+" "+val.room_number})
         this.$router.push({name:'loan'})        
       }
     }
