@@ -74,7 +74,15 @@ export default {
   },
 	methods: {
 		onPan(e) {
-			const dragOffset = -100 / this.itemWidth * e.deltaX / this.count * this.overflowRatio;
+      let dragSpeed = -20
+      console.log(parseInt(e.velocityX))
+      if (parseInt(e.velocityX) > 2 || parseInt(e.velocityX) < -2) {
+        this.$refs.list.style.transition = "1s ease"
+        dragSpeed = -70
+      } else {
+        this.$refs.list.style.transition = "unset"
+      }
+			const dragOffset = dragSpeed / this.itemWidth * e.deltaX / this.count * this.overflowRatio;
 			const transform = this.currentOffset + dragOffset;
       this.$refs.list.style.setProperty("--x", transform);
       this.transform = this.transform + transform
