@@ -215,8 +215,8 @@ export default {
       if(this.bukkenPrice.model  == "" ){
         this.bukkenPrice.model  = 0;
       }
-      if(this.kinri.model  == "" || this.kinri.model  == "0.0" || this.kinri.model  == "0.00"){
-        this.kinri.model  = 0.01;
+      if(this.kinri.model  == "" ){
+        this.kinri.model  = 0;
       }
       if(this.atamakin.model  == "" ){
         this.atamakin.model  = 0;
@@ -225,7 +225,7 @@ export default {
         this.bonusPay.model  = 0;
       }
       if(this.hensaiPeriod.model  == "" ){
-        this.hensaiPeriod.model  = 1;
+        this.hensaiPeriod.model  = 0;
       }
 
 
