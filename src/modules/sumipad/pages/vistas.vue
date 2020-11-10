@@ -3,6 +3,8 @@
     <p class="compass">{{compass}}</p>
     <app-vista-controller />
     <div class="slider__list" ref="list" :style="{ backgroundImage: 'url(' + DIR+vistas.image + ')' }"></div> 
+    <button v-longclick="() => buttonLeft(-5)" class="left-btn"><i class="fas fa-chevron-left"></i></button>
+    <button v-longclick="() => buttonLeft(5)" class="right-btn"><i class="fas fa-chevron-right"></i></button>    
   </v-sheet>
 </template>
 <script>
@@ -74,18 +76,17 @@ export default {
   },
 	methods: {
 		onPan(e) {
-      let dragSpeed = -20
-      console.log(parseInt(e.velocityX))
-      if (parseInt(e.velocityX) > 2 || parseInt(e.velocityX) < -2) {
+      let dragSpeed = -15
+      if (parseInt(e.velocityX) > 1 || parseInt(e.velocityX) < -1) {
         this.$refs.list.style.transition = "1s ease"
-        dragSpeed = -70
+        dragSpeed = -100
       } else {
         this.$refs.list.style.transition = "unset"
       }
+      
 			const dragOffset = dragSpeed / this.itemWidth * e.deltaX / this.count * this.overflowRatio;
-			const transform = this.currentOffset + dragOffset;
+      const transform = this.currentOffset + dragOffset;
       this.$refs.list.style.setProperty("--x", transform);
-      this.transform = this.transform + transform
 
       let style = getComputedStyle(this.$refs.list)
       let pos = parseFloat(style.backgroundPosition.match(/.*?(?=p|$)/i)[0])
@@ -146,10 +147,22 @@ export default {
         } 
       } else {
         this.compass_change = true
-      }
-
-      
-    }
+      }      
+    },
+    buttonLeft(pos){
+      let style = getComputedStyle(this.$refs.list)
+      this.position = parseFloat(style.backgroundPosition.match(/.*?(?=p|$)/i)[0])
+      this.position = this.position + pos
+      this.$refs.list.style.transition = "1s ease"
+			this.$refs.list.style.setProperty("--x", this.position);
+    },
+    buttonRight(pos){
+      let style = getComputedStyle(this.$refs.list)
+      this.position = parseFloat(style.backgroundPosition.match(/.*?(?=p|$)/i)[0])
+      this.position = this.position + pos
+      this.$refs.list.style.transition = "1s ease"
+			this.$refs.list.style.setProperty("--x", this.position);    
+    },
 	}
 }
 </script>
@@ -178,6 +191,29 @@ p.compass {
   -webkit-backface-visibility: hidden;
           backface-visibility: hidden;
   background-position-x: calc(var(--x, 0) * 1%);
+}
+.left-btn,
+.right-btn {
+  position: absolute;
+  height: 100%;
+  width: 60px;
+  background: rgba(255, 255, 255, 0.479);
+  outline: 0;
+  border: 0;
+  padding-bottom: 56px;
+}
+.left-btn .fa-chevron-left,
+.right-btn .fa-chevron-right {
+  font-size: 27px;
+  position: relative;
+}
+.left-btn {
+  top: 0;
+  left: 0;
+}
+.right-btn {
+  top: 0;
+  right: 0;
 }
 
 </style>
