@@ -28,7 +28,7 @@
     </v-card>
 
     <v-card class="my-10 botton_content_wrapper text-center py-4 ma-0" width="38%" v-if="plan != null">
-      <img :src="DIR+plan.image" @click="setImage(plan.image)" class="side--img">
+      <img :src="DIR+plan.image" class="side--img">
       <v-card color="#f1f2f6" class="mx-auto d-flex flex-column py-2 px-4 plan-card text-left" :class="{pointer:plan.status == '販売中' || plan.status == '商談中'}" max-width="270px" @click="toLoanWithSelectedRoom(plan)">   
         <div class="d-flex align-center mb-2">
           <div>
