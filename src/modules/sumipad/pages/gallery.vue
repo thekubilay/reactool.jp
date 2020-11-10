@@ -1,9 +1,9 @@
 <template>
   <v-sheet class="wh100 gallery text-center d-flex flex-column justify-space-between" v-if="get_project != null">
-    <div></div>
-    <carousel :paginationEnabled0="false" :scrollPerPage="true" :perPageCustom="[[480, 2], [768, 3],[1024, 4]]">
+    <v-img class="selected--image" :src="DIR+get_project.gallery[selected_index].image"></v-img>
+    <carousel :scrollPerPage="true" :perPageCustom="[[480, 2],[768, 3],[1024, 4]]">
       <slide v-for="(item, index) in get_project.gallery" :key="index">
-        <v-img style="width: 200px; max-width: 100%;" class="mx-auto" :src="DIR+item.image"></v-img>
+        <v-img style="width: 200px; max-width: 100%;" class="mx-auto" :src="DIR+item.image" @click="selected_index = index"></v-img>
       </slide>
     </carousel>
   </v-sheet>
@@ -22,6 +22,7 @@ export default {
     return {
       DIRR: process.env.VUE_APP_MEDIA_URL,
       selected_index: 0,
+      selected_image: null
     }
   },
   watch: {
@@ -38,7 +39,13 @@ export default {
   
 }
 </script>
-<style scoped>
+<style>
+.selected--image {
+  width: auto;
+  margin: 20px 20px;
+  border-radius: 10px;
+  height: calc(100% - 300px) !important;
+}
 .VueCarousel-slide {
   position: relative;
   background: #303952;
@@ -48,5 +55,8 @@ export default {
   text-align: center;
   min-height: 100px;
   padding: 10px 0;
+}
+.VueCarousel-pagination {
+  display: none !important;
 }
 </style>
