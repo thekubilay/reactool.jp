@@ -211,6 +211,24 @@ export default {
       this.hensaiPeriod = this.modelFilter(val, "返済時間")[0];
 
 
+      // 数字が消されたら0にする
+      if(this.bukkenPrice.model  == "" ){
+        this.bukkenPrice.model  = 0;
+      }
+      if(this.kinri.model  == "" || this.kinri.model  == "0.0" || this.kinri.model  == "0.00"){
+        this.kinri.model  = 0.01;
+      }
+      if(this.atamakin.model  == "" ){
+        this.atamakin.model  = 0;
+      }
+      if(this.bonusPay.model  == "" ){
+        this.bonusPay.model  = 0;
+      }
+      if(this.hensaiPeriod.model  == "" ){
+        this.hensaiPeriod.model  = 1;
+      }
+
+
       // 借入希望価格(a)
       let purchaseRequestPrice = new BigNumber(this.bukkenPrice.model);
       // // // ローン金利(d)
@@ -223,12 +241,13 @@ export default {
       // // // 返済期間(c)
       let payBackPeriod = new BigNumber(this.hensaiPeriod.model);
 
+
       // 頭金を借入金額から引いておく
       purchaseRequestPrice = new BigNumber(purchaseRequestPrice - atamakin);
         // this.kinri_decimal = new BigNumber(this.kinri).times(0.01).toNumber();
 
-        var culc1 = finance.div(new BigNumber(10)).div(new BigNumber(2));
-        var culc2 = finance.div(new BigNumber(10)).div(new BigNumber(12));
+        var culc1 = finance.div(new BigNumber(100)).div(new BigNumber(2));
+        var culc2 = finance.div(new BigNumber(100)).div(new BigNumber(12));
         var culc3 = payBackPeriod.times(new BigNumber(12));
         var culc4 = (culc2.plus(new BigNumber(1))).exponentiatedBy(culc3);
 
