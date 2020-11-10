@@ -4,7 +4,8 @@
       <li class="files-file" v-for="(item, index) in get_project.documents" :key="index">
         <a :href="item.pdf" target="_blank">
           <figure class="files-file-img d-flex justify-center py-2">
-            <img class="mx-auto pdf__img" :src="DIR+item.image"></figure>            
+            <div class="bg-doc-img" :class="{active: item.image !== null}" :style="{backgroundImage: 'url('+ nullChecker(item.image) +')'}"></div>
+          </figure>            
           <p class="files-file-txt">{{ item.name }}</p>
         </a>  
       </li>
@@ -20,6 +21,19 @@ export default {
     ...mapGetters([
       "get_project",
     ])
+  },
+  methods : {
+    nullChecker(image){
+      if (image == null) {
+        return image = require('../../../assets/images/documents/pdf_dummy.png')
+      } else {
+        return this.DIR+image
+      }
+    },
+    noImage(element){
+      element.target.src = require('../../../assets/images/documents/pdf_dummy.png');
+      return
+    },
   }
 }
 </script>
@@ -55,5 +69,15 @@ export default {
   text-align: center;
   color: #545454;
   padding-bottom: 20px;
+}
+.bg-doc-img {
+    width: 90%;
+    height: 200px;
+    margin: 20px auto;
+    background-size: contain;
+    background-position: center;
+}
+.bg-doc-img.active {
+    background-size: auto 100%;
 }
 </style>
