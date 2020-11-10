@@ -37,7 +37,7 @@
     <v-container class="d-flex plan__wrapper" :class="{'justify-center': compare_detail == null}">
       <div class="detail__content__wrapper d-flex flex-column align-center justify-center hw100per" v-if="plan_detail != null">
         <img :src="DIR+plan_detail.image" @click="setImage(plan_detail.image)">
-        <v-card color="#f1f2f6" class="d-flex py-2 px-4 plan-card pointer ma-0" @click="toLoanWithSelectedRoom(plan_detail)">      
+        <v-card color="#f1f2f6" class="d-flex py-2 px-4 plan-card pointer ma-0" >      
           <div>
             <h5 class="display-1 font-weight-bold mr-2">{{plan_detail.type}}<span class="ml-1 body-2">type</span></h5>
             <h6 class="title">{{plan_detail.menu}}</h6>
@@ -46,22 +46,22 @@
           <div class="mx-5">
             <p class="sm--txt mb-0 mt-2"><span class="dt">間取り:</span> {{plan_detail.room_plan}}</p>          
             <p class="sm--txt mb-0 mt-1"><span class="pr-4 ">広さ:</span> {{defaultSep(plan_detail.room_m2)}}㎡</p>          
-            <p class="sm--txt mb-0 mt-1"><span class="pr-4 ">価格:</span> {{defaultSep(plan_detail.price)}}円</p>  
+            <!-- <p class="sm--txt mb-0 mt-1"><span class="pr-4 ">価格:</span> {{defaultSep(plan_detail.price)}}円</p>   -->
           </div>                  
-          <v-card-actions class="pa-0">
+          <!-- <v-card-actions class="pa-0">
             <v-btn
               outlined
               text
             >
               資金計画
             </v-btn>
-          </v-card-actions>
+          </v-card-actions> -->
         </v-card>      
       </div>
       <div class="detail__content__wrapper d-flex flex-column align-center justify-center hw100per"
         v-if="compare_detail != null">
         <img :src="DIR+compare_detail.image" @click="setImage(compare_detail.image)">
-        <v-card color="#f1f2f6" class="d-flex py-2 px-4 plan-card pointer ma-0" @click="toLoanWithSelectedRoom(compare_detail)">   
+        <v-card color="#f1f2f6" class="d-flex py-2 px-4 plan-card pointer ma-0" >   
           <div>
             <h5 class="display-1 font-weight-bold mr-2">{{compare_detail.type}}<span class="ml-1 body-2">type</span></h5>
             <h6 class="title">{{compare_detail.menu}}</h6>
@@ -70,16 +70,16 @@
           <div class="mx-5">
             <p class="sm--txt mb-0 mt-2"><span class="dt">間取り:</span> {{compare_detail.room_plan}}</p>          
             <p class="sm--txt mb-0 mt-1"><span class="pr-4 ">広さ:</span> {{defaultSep(compare_detail.room_m2)}}㎡</p>          
-            <p class="sm--txt mb-0 mt-1"><span class="pr-4 ">価格:</span> {{defaultSep(compare_detail.price)}}円</p>  
+            <!-- <p class="sm--txt mb-0 mt-1"><span class="pr-4 ">価格:</span> {{defaultSep(compare_detail.price)}}円</p>   -->
           </div>                  
-          <v-card-actions class="pa-0">
+          <!-- <v-card-actions class="pa-0">
             <v-btn
               outlined
               text
             >
               資金計画
             </v-btn>
-          </v-card-actions>                   
+          </v-card-actions>                    -->
         </v-card>
       </div>
     </v-container>
