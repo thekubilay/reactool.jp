@@ -225,7 +225,7 @@ export default {
         this.bonusPay.model  = 0;
       }
       if(this.hensaiPeriod.model  == "" ){
-        this.hensaiPeriod.model  = 0;
+        this.hensaiPeriod.model  = 1;
       }
 
 
