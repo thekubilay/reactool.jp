@@ -103,7 +103,7 @@ export default {
   background-color: #f1f2f6;
   padding: 0 5px;
   position: relative;
-  z-index: 1;
+  z-index: 99;
   overflow: hidden;
   -webkit-box-shadow: 2px 0px 15px -6px rgba(0,0,0,0.36) !important;
   -moz-box-shadow: 2px 0px 15px -6px rgba(0,0,0,0.36) !important;

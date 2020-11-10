@@ -150,7 +150,7 @@ export default {
 	position: absolute;
 	top: 0;
 	left: 0;
-	z-index: 99;
+	z-index: 90;
 }
 #filters > .combobox {
 	width: 200px;
