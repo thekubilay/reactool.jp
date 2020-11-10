@@ -1,5 +1,5 @@
 <template>
-  <v-navigation-drawer permanent min-width="300px" width="300px" class="side__nav">   
+  <v-navigation-drawer permanent min-width="300px" width="300px" class="side__nav" touchless>   
     <div class="map--filters d-flex align-center justify-end">
       <a :href="'https://maps.google.com/?q='+get_project.lat+','+get_project.lng" target="_blank" class="to-google">in google <i class="fas fa-chevron-right"></i></a>     
     </div>
