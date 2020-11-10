@@ -3,6 +3,13 @@ html, body {
   width: 100%;
   height: calc(100vh - 62px) !important;
 }
+body {
+  min-height: -webkit-fill-available;
+}
+
+html {
+  height: -webkit-fill-available;
+}
 .wh100raw {
   height: 100vh;
 }

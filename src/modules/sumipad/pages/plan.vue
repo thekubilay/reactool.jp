@@ -170,7 +170,7 @@
         this.plan = plan[0].id
       },
       findCompares() {
-        this.compares = this.get_project.plans
+        this.compares = this.get_project.plans.sort(this.dynamicSort("type"));
       },
       toLoanWithSelectedRoom(val){
         this.$store.dispatch("UPDATE_SELECTED_ROOM", {price:val.price, room: val.type+" "+val.room_number})
