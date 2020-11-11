@@ -75,22 +75,33 @@ export default {
     }
   },
 	methods: {
+    calculateOverAll(dragSpeed, itemWidth, deltaX, count, overflowRatio){
+      let dragOffset = dragSpeed / itemWidth * deltaX / count * overflowRatio
+      let transform = this.currentOffset + dragOffset;
+      this.$refs.list.style.setProperty("--x", transform);        
+      return transform
+    },
 		onPan(e) {
       let dragSpeed = -22
+      let transform
       if (parseInt(e.velocityX) > 1 || parseInt(e.velocityX) < -1) {
         this.$refs.list.style.transition = "1s ease"
         dragSpeed = -100
+        transform = this.calculateOverAll(dragSpeed, this.itemWidth, e.deltaX, this.count, this.overflowRatio)
+        let style = getComputedStyle(this.$refs.list)
+        let pos = parseFloat(style.backgroundPosition.match(/.*?(?=p|$)/i)[0])
+        // for (let i = 0; i < pos; i++) {
+        //   this.position += parseInt(i)
+        // }
       } else {
+        // def dragspeed -22
         this.$refs.list.style.transition = "unset"
+        transform = this.calculateOverAll(dragSpeed, this.itemWidth, e.deltaX, this.count, this.overflowRatio)
+        let style = getComputedStyle(this.$refs.list)
+        let pos = parseFloat(style.backgroundPosition.match(/.*?(?=p|$)/i)[0])
+        this.position = parseInt(pos)
       }
       
-			const dragOffset = dragSpeed / this.itemWidth * e.deltaX / this.count * this.overflowRatio;
-      const transform = this.currentOffset + dragOffset;
-      this.$refs.list.style.setProperty("--x", transform);
-
-      let style = getComputedStyle(this.$refs.list)
-      let pos = parseFloat(style.backgroundPosition.match(/.*?(?=p|$)/i)[0])
-      this.position = pos
 
 			if (e.isFinal) {
 				this.currentOffset = transform;
@@ -116,7 +127,7 @@ export default {
       pos = parseInt(pos)
 
       const dirs = ["東", "南", "西", "北"]
-      if (pos % 30 === 0) {
+      if (pos % 20 === 0) {
         if (this.compass_change) {
           if (this.counter < 3) {
             this.counter+=1            
@@ -135,7 +146,7 @@ export default {
       pos = parseInt(pos)
 
       const dirs = ["東", "南", "西", "北"]
-      if (pos % 30 === 0) {
+      if (pos % 20 === 0) {
         if (this.compass_change) {
           if (this.counter > 0) {
             this.counter -= 1            
