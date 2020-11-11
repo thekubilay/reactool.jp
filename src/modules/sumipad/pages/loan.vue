@@ -1,9 +1,9 @@
 <template>
   <v-sheet height="100vh" color="#f5f6fa" class="d-flex align-center justify-center pb-14">
     <v-card width="100%" max-width="900px" height="600px" max-height="600px">
-      <div class="result__wrapper d-flex align-center px-10">
-        <h2 class="vw100 font-weight-regular d-flex align-center justify-space-around">
-          <div class="d-flex align-center"><span class="d-flex align-center">{{room != null ? room+" 室号 "+price+"万円 | "  : ""}}月々返済額</span><span class="d-flex align-center price--txt">{{monthReturnAmountM}} 万円</span></div>
+      <div class="result__wrapper align-center px-10">
+        <h2 class="vw100 font-weight-regular align-center justify-space-around">
+          <div class="d-flex align-center" :class="{active: room != null}"><span class="d-flex align-center">{{room != null ? room+" 室号 "+price+"万円 "  : ""}}</span><span class="d-flex align-center price--txt"><small>月々返済額</small>{{monthReturnAmountM}} 万円</span></div>
         </h2>
       </div>
       <div class="sliders__wrapper px-10">
@@ -258,9 +258,13 @@ export default {
 }
 .result__wrapper h2 {
   height: 100%;
+  padding-top: 20px;
 }
 .result__wrapper h2 > span {
   height: 100%;
+}
+.result__wrapper h2 > div.active {
+  justify-content: space-between;
 }
 .result__wrapper h2 > div > span {
   height: 100%;
@@ -268,10 +272,14 @@ export default {
 }
 .result__wrapper span.price--txt{
   font-size: 40px;
-  margin-left: 20px;
   position: relative;
   border-bottom: 4px solid black;
 }
+.result__wrapper span.price--txt small{
+  font-size: 24px;
+  margin-right: 12px;
+}
+
 
 .sliders__wrapper {
   height: 500px;
