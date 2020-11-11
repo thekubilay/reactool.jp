@@ -1,6 +1,6 @@
 <template>
   <v-sheet v-pan="onPan" width="ww100" class="noselect d-flex align-center wh100 pan" v-if="get_project_load == 2">
-    <p class="compass">{{compass}}</p>
+    <!-- <p class="compass">{{compass}}</p> -->
     <app-vista-controller />
     <div class="slider__list" ref="list" :style="{ backgroundImage: 'url(' + DIR+vistas.image + ')' }"></div> 
     <button v-longclick="() => buttonLeft(-5)" class="left-btn"><i class="fas fa-chevron-left"></i></button>
@@ -88,18 +88,20 @@ export default {
         this.$refs.list.style.transition = "1s ease"
         dragSpeed = -100
         transform = this.calculateOverAll(dragSpeed, this.itemWidth, e.deltaX, this.count, this.overflowRatio)
-        let style = getComputedStyle(this.$refs.list)
-        let pos = parseFloat(style.backgroundPosition.match(/.*?(?=p|$)/i)[0])
-        // for (let i = 0; i < pos; i++) {
-        //   this.position += parseInt(i)
+        // let style = getComputedStyle(this.$refs.list)
+        // let pos = parseInt(style.backgroundPosition.match(/.*?(?=p|$)/i)[0])
+        // if (e.isFinal) {
+        //   for (let i = 0; i < pos; i++) {
+        //     this.position += i
+        //   }          
         // }
       } else {
         // def dragspeed -22
         this.$refs.list.style.transition = "unset"
         transform = this.calculateOverAll(dragSpeed, this.itemWidth, e.deltaX, this.count, this.overflowRatio)
-        let style = getComputedStyle(this.$refs.list)
-        let pos = parseFloat(style.backgroundPosition.match(/.*?(?=p|$)/i)[0])
-        this.position = parseInt(pos)
+        // let style = getComputedStyle(this.$refs.list)
+        // let pos = parseInt(style.backgroundPosition.match(/.*?(?=p|$)/i)[0])
+        // this.position = pos
       }
       
 
@@ -123,11 +125,9 @@ export default {
       }
     },
     compassActionRight(position){
-      let pos = position
-      pos = parseInt(pos)
-
+      console.log(position)
       const dirs = ["東", "南", "西", "北"]
-      if (pos % 20 === 0) {
+      if (position % 20 === 0) {
         if (this.compass_change) {
           if (this.counter < 3) {
             this.counter+=1            
@@ -142,11 +142,8 @@ export default {
       }  
     },
     compassActionLeft(position){
-      let pos = position
-      pos = parseInt(pos)
-
       const dirs = ["東", "南", "西", "北"]
-      if (pos % 20 === 0) {
+      if (position % 20 === 0) {
         if (this.compass_change) {
           if (this.counter > 0) {
             this.counter -= 1            
