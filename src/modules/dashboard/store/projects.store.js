@@ -2,7 +2,7 @@ import projectsApi from "./projects.api"
 export const projects = {
   state: {
     projects_load:0,    
-    projects:[],
+    projects: [],
     form: null,
   },
   mutations: {

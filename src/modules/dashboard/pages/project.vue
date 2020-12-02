@@ -1,7 +1,7 @@
 <template>
   <v-sheet width="100%">
     <app-sub-header />
-    <div class="cards--wrapper px-5 pt-5 d-flex pb-14 flex-wrap wh100 scrollable justify-space-between" v-if="get_project_load == 2">
+    <div class="cards--wrapper px-5 pt-5 d-flex pb-14 flex-wrap wh100 scrollable justify-space-between" v-if="get_project !== null">
       <app-card v-for="(card, index) in project_cards" :key="index" :card="card"></app-card> 
     </div>
   </v-sheet>

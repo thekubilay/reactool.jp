@@ -5,12 +5,12 @@
         <v-row class="px-5">
           <v-col class="pt-0 mt-0" :sm="form.col" :md="form.span" v-for="(form, index) in selected_form.content" :key="index">
             <!-- text field -->
-            <v-text-field v-if="form.kind == 'text'" class="xsm--txt" :label="form.label" :placeholder="form.holder" v-model="form.model" outlined dense></v-text-field>
+            <v-text-field v-if="form.kind === 'text'" class="xsm--txt" :label="form.label" :placeholder="form.holder" v-model="form.model" outlined dense></v-text-field>
             <!-- hidden field -->
-            <input v-if="form.kind == 'hidden'" type="hidden">
+            <input v-if="form.kind === 'hidden'" type="hidden">
             <!-- image field -->
             <v-file-input
-              v-if="form.kind == 'file'"
+              v-if="form.kind === 'file'"
               :rules="rules"
               v-model="form.model"
               label="画像"
@@ -24,7 +24,7 @@
             ></v-file-input>
             <!-- pdf field -->
             <v-file-input
-              v-if="form.kind == 'pdf'"
+              v-if="form.kind === 'pdf'"
               :rules="rules"
               v-model="form.model"
               label="PDF"
@@ -38,7 +38,7 @@
             ></v-file-input>
             <!-- select field -->
             <v-select
-              v-if="form.kind == 'select' && form.name != 'sub_floor'"
+              v-if="form.kind === 'select' && form.name !== 'sub_floor'"
               dense
               :placeholder="form.holder"
               :items="form.selects"
@@ -47,7 +47,7 @@
               outlined
             ></v-select>
             <v-select
-              v-if="form.kind == 'select' && form.name == 'sub_floor'"
+              v-if="form.kind === 'select' && form.name === 'sub_floor'"
               dense
               :items="form.selects"
               :item-value="'val'" 
@@ -63,10 +63,10 @@
 
       <v-card-actions>
         <v-spacer></v-spacer>
-        <v-btn color="error" v-if="get_form.hasOwnProperty('plan') && get_form.form_name != 'update_plan_image'" text @click="remove(selected_form.delete, get_form.plan.id)">削除</v-btn>
-        <v-btn color="error" v-if="get_form.hasOwnProperty('vista') && get_form.form_name != 'update_vista_image'" text @click="remove(selected_form.delete, get_form.vista.id)">削除</v-btn>
+        <v-btn color="error" v-if="get_form.hasOwnProperty('plan') && get_form.form_name !== 'update_plan_image'" text @click="remove(selected_form.delete, get_form.plan.id)">削除</v-btn>
+        <v-btn color="error" v-if="get_form.hasOwnProperty('vista') && get_form.form_name !== 'update_vista_image'" text @click="remove(selected_form.delete, get_form.vista.id)">削除</v-btn>
         <v-btn color="error" v-if="get_form.hasOwnProperty('coord')" text @click="remove(selected_form.delete, get_form.coord.id)">削除</v-btn>
-        <v-btn color="error" v-if="get_form.hasOwnProperty('doc') && get_form.form_name != 'update_doc_image' && get_form.form_name != 'update_doc_pdf'" text @click="remove(selected_form.delete, get_form.doc.id)">削除</v-btn>
+        <v-btn color="error" v-if="get_form.hasOwnProperty('doc') && get_form.form_name !== 'update_doc_image' && get_form.form_name !== 'update_doc_pdf'" text @click="remove(selected_form.delete, get_form.doc.id)">削除</v-btn>
         <v-btn color="primary" text @click="submit()">登録</v-btn>
       </v-card-actions>
     </v-card>
@@ -85,9 +85,6 @@ export default {
       rules: [
         value => !value || value.size < 700000 || '700KB以下でイメージロードしてください!',
       ],
-      rules: [
-        value => !value || value.size < 4000000 || '4MB以下でイメージロードしてください!',
-      ],      
     }
   },
   async mounted() {
@@ -184,7 +181,7 @@ export default {
           else if (this.get_form.hasOwnProperty("doc")) {
             localStorage.setItem("docId", this.get_form.doc.id) 
             fd.append("id", this.get_form.doc.id)
-            if (obj["file"].type == "application/pdf") {
+            if (obj["file"].type === "application/pdf") {
               fd.append("pdf", obj["file"], obj["file"].name)
             } else {
               fd.append("image", obj["file"], obj["file"].name)
