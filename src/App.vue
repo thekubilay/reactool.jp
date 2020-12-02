@@ -13,12 +13,12 @@ export default {
   name: 'App',
   components:{bottomNavigation,},
   created(){    
-    if (window.location.href.split("/")[4] != "projects" && 
-        window.location.href.split("/")[4] != "project" && 
-        window.location.href.split("/")[4] != "login" && 
-        window.location.href.split("/")[4] != "") {
-      this.$route.params.slug = window.location.href.split("/")[4]
-      this.$store.dispatch("RETRIEVE_PROJECT", {pid:window.location.href.split("/")[4]})      
+    if (window.location.href.split("/")[3] != "projects" && 
+        window.location.href.split("/")[3] != "project" && 
+        window.location.href.split("/")[3] != "login" && 
+        window.location.href.split("/")[3] != "") {
+      this.$route.params.slug = window.location.href.split("/")[3]
+      this.$store.dispatch("RETRIEVE_PROJECT", {pid:window.location.href.split("/")[3]})      
     } else {
       this.$route.params.slug = "dummy"
       if (this.get_token) {

@@ -21,7 +21,7 @@
               </div>
             </div>
 
-            <div v-else-if="item.sub_floor">sadas</div>
+            <div v-else-if="item.sub_floor">{{item.sub_floor_content}}</div>
           </div>
         </li>
       </ul>

@@ -16,6 +16,7 @@ const base = [
 
 const routes = base.concat(auth, dashboard, sumaipad)
 const router = new VueRouter({
+  mode: 'history',
   routes
 })
 

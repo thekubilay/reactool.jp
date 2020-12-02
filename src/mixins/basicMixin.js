@@ -9,8 +9,8 @@ export const basicMixin = {
   },
   methods: {
     loadFrontEndProject(){
-      this.$route.params.pid = window.location.href.split("/")[4]
-      this.$store.dispatch("RETRIEVE_PROJECT", {pid:window.location.href.split("/")[4]})
+      this.$route.params.pid = window.location.href.split("/")[3]
+      this.$store.dispatch("RETRIEVE_PROJECT", {pid:window.location.href.split("/")[3]})
     },
     isEmpty(obj) {
       for(var key in obj) {

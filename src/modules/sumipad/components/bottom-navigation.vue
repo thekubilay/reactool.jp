@@ -1,5 +1,5 @@
 <template>
-  <v-bottom-navigation flat color="#2f3542" absolute height="62px" grow>
+  <v-bottom-navigation flat color="#2f3542" absolute height="90px" grow>
     <v-btn height="100%" class="not--active" v-for="(item, index) in routes" :key="index" :to="{name:item.route}" :exact="true" exact-active-class="--active font-weight-bold">
       <span>{{item.name}}</span>
       <v-icon class="mx-0">{{item.icon}}</v-icon>
