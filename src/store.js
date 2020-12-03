@@ -7,6 +7,7 @@ import { gmapApi } from "./modules/dashboard/store/coords.store";
 import { coords } from "./modules/gmap/store/coords.store";
 import { plans } from "./modules/dashboard/store/plans.store";
 import { plan } from "./modules/sumipad/store/plan.store";
+import { color } from "./modules/sumipad/store/color.store";
 import { vistas } from "./modules/dashboard/store/vistas.store";
 import { vista } from "./modules/sumipad/store/vista.store";
 import { gallery } from "./modules/dashboard/store/gallery.store";
@@ -23,6 +24,7 @@ export default new Vuex.Store({
     coords,
     plans,
     plan,
+    color,
     vistas,
     vista, 
     gallery,

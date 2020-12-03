@@ -42,12 +42,12 @@ export const basicMixin = {
     },
     defaultSep(text){
       text = text+""
-      if (text.length == 4) {
+      if (text.length === 4) {
         let part1g = text.slice(0,2)
         let part2g = text.slice(2,4)
         return part1g+"."+part2g
       } 
-      else if (text.length == 5) {
+      else if (text.length === 5) {
         let part1 = text.slice(0,3)
         let part2 = text.slice(3,6)
         return part1+"."+part2
@@ -62,17 +62,18 @@ export const basicMixin = {
       let holder = []
       units.forEach((element,index) => {
         if (index % wide_floor === 0) {
-          holder.push(units.slice(index-8, index))
+          holder.push(units.slice(index-wide_floor, index))
         }
       });
 
-      // remove the empty arr.       
+      // remove the empty arr.
       holder.shift()
-      // create last nested arr. 
-      let lastArrStart = holder[holder.length-1][wide_floor-1]
+      // create last nested arr.
+      let lastArrStart = units.length-wide_floor
       let lastArrFinish = units.length
-      holder.push(units.slice(lastArrStart.id, lastArrFinish))
+      holder.push(units.slice(lastArrStart, lastArrFinish))
       // final floor #1 ~ #floor
+
       return holder
 
     }
