@@ -1,5 +1,5 @@
 <template>
-  <v-sheet height="100%" width="100%" class="rel">
+  <v-sheet width="100%" :class="{specH: ipad}" class="rel">
 		<div id="filters" class="d-flex pa-3">
 			<v-select
 				class="xsm-txt combobox mr-5"
@@ -41,6 +41,7 @@ export default {
 	mixins:[basicMixin],
 	data() {
 		return {
+		  ipad:false,
 			google: null,
 			map: null,
 			info_window: null,
@@ -48,6 +49,10 @@ export default {
 		}
 	},
 	async mounted() {
+    const navigator = window.navigator;
+    if ((navigator.userAgent.match(/Mac/) && navigator.maxTouchPoints && navigator.maxTouchPoints > 2) || navigator.userAgent.match("iPad")) {
+      this.ipad = true
+    }
 		this.google = await GoogleMapsApiLoader({
 			apiKey: this.GOOGLE_API
 		})
@@ -163,5 +168,8 @@ export default {
 }
 #filters > .filter-btn {
 	box-shadow: 0 1px 10px rgba(0, 0, 0, 0.700);
+}
+.specH {
+  height: calc(100% - 90px) !important;
 }
 </style>

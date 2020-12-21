@@ -1,6 +1,6 @@
 <template>
-  <v-sheet class="px-10 d-flex wh100" :class="{'justify-center':plan === null, 'justify-space-between':plan !== null}" width="100%" v-if="get_project_load == 2">
-    <v-card class="mt-5 overflow-y-auto floor--card" width="60%" min-width="500px">
+  <v-sheet class="px-10 d-flex" height="calc(100% - 90px)" :class="{'justify-center':plan === null, 'justify-space-between':plan !== null}" width="100%" v-if="get_project_load == 2">
+    <v-card class="mt-5 overflow-y-auto floor--card" width="60%" :class="{specHcard:ipad}" min-width="500px">
       <ul class="floor--wrapper" v-for="(floor, index) in rooms" :key="index">
         <li class="floor--number rel">
           <h3 class="d-flex align-center justify-center">{{get_project.floor - index}}階</h3>
@@ -27,7 +27,7 @@
       </ul>
     </v-card>
 
-    <v-card class="my-10 botton_content_wrapper text-center py-4 ma-0" width="38%" v-if="plan != null">
+    <v-card class="my-10 botton_content_wrapper text-center py-4 ma-0" width="38%" v-if="plan != null" :class="{specHcardImgWrap:ipad}">
       <img :src="DIR+plan.image" class="side--img">
       <v-card color="#f1f2f6" class="mx-auto d-flex flex-column py-2 px-4 plan-card text-left" :class="{pointer:plan.status == '販売中' || plan.status == '商談中'}" max-width="270px" @click="toLoanWithSelectedRoom(plan)">   
         <div class="d-flex align-center mb-2">
@@ -61,30 +61,23 @@ export default {
   mixins:[basicMixin],
   data(){
     return {
+      ipad:false,
       plan:null,
     }
-  },  
+  },
+  mounted(){
+    const navigator = window.navigator;
+    if ((navigator.userAgent.match(/Mac/) && navigator.maxTouchPoints && navigator.maxTouchPoints > 2) || navigator.userAgent.match("iPad")) {
+      this.ipad = true
+    }
+  },
   computed: {
     ...mapGetters([
       "get_project",
       "get_project_load",
     ]),
     rooms(){
-      let holder = []
-      this.get_project.units.forEach((element,index) => {
-        if (index % this.get_project.wide_floor === 0) {
-          holder.push(this.get_project.units.slice(index-8, index))
-        }
-      });
-
-      // remove the empty arr.       
-      holder.shift()
-      // create last nested arr. 
-      let lastArrStart = holder[holder.length-1][this.get_project.wide_floor-1]
-      let lastArrFinish = this.get_project.units.length
-      holder.push(this.get_project.units.slice(lastArrStart.id, lastArrFinish))
-      // final floor #1 ~ #floor
-      return holder
+      return this.buildingUnits(this.get_project.units, this.get_project.wide_floor)
     }
   },
   methods: {
@@ -165,6 +158,12 @@ img.side--img {
 }
 .botton_content_wrapper > .detail__content>div.to__loan>.fa-chevron-right {
   font-size: 30px;
+}
+.specHcard {
+  height: calc(100% - 120px);
+}
+.specHcardImgWrap {
+  height: calc(100% - 165px);
 }
 
 </style>

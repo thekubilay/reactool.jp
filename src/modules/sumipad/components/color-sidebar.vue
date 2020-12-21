@@ -3,6 +3,8 @@
     <div class="px-4 xxsm--txt d-flex justify-space-between mb-6 mt-4">
       <v-btn elevation="0"
              width="48%"
+             class="chg-btn"
+             :class="{active:get_selected_color_type === item.val}"
              @click="changeTypeNdRoom('type', item.val)"
              v-for="(item, index) in types"
              :key="index">{{item.txt}}</v-btn>
@@ -10,7 +12,8 @@
     <div class="px-4 d-flex flex-wrap justify-space-between mb-2">
       <v-btn elevation="0"
              width="48%"
-             class="mb-2"
+             :class="{active:get_selected_color_room === item.val}"
+             class="mb-2 chg-btn"
              @click="changeTypeNdRoom('room', item.val)"
              v-for="(item, index) in rooms"
              :key="index">{{item.txt}}</v-btn>
@@ -34,8 +37,23 @@
     </div>
 
     <h4 class="pl-4 py-2" v-if="get_selected_color_room === 'kitchen'">キッチン扉</h4>
-    <div class="d-flex flex-wrap px-4" v-if="get_selected_color_room === 'kitchen'">
-      <div class="chip-wrapper" v-for="(item, index) in kitchen_bars" :key="item+index">
+    <div class="d-flex flex-wrap px-4" v-if="get_selected_color_type === 'n' &&get_selected_color_room === 'kitchen'">
+      <div class="chip-wrapper" v-for="(item, index) in kitchen_bars_n" :key="item+index">
+        <div class="ww100per d-flex flex-column align-center">
+          <p class="mb-1 xxsm--txt text-capitalize">{{item.color}}</p>
+          <v-btn width="40px"
+                 height="40px"
+                 @click="changeColor('bar', item.color)"
+                 class="pa-0 text-lowercase font-weight-regular d-flex flex-column align-center"
+                 :color="item.hex"
+                 fab>
+            <v-icon v-if="item.color === get_selected_kitchen_bar_color" :color="item.color !== 'white' ? 'white' : 'black'">mdi-check</v-icon>
+          </v-btn>
+        </div>
+      </div>
+    </div>
+    <div class="d-flex flex-wrap px-4" v-if="get_selected_color_type === 'r' && get_selected_color_room === 'kitchen'">
+      <div class="chip-wrapper" v-for="(item, index) in kitchen_bars_r" :key="item+index">
         <div class="ww100per d-flex flex-column align-center">
           <p class="mb-1 xxsm--txt text-capitalize">{{item.color}}</p>
           <v-btn width="40px"
@@ -50,8 +68,8 @@
       </div>
     </div>
 
-    <h4 class="pl-4 py-2" v-if="get_selected_color_room === 'kitchen'">キッチン天板</h4>
-    <div class="d-flex flex-wrap px-4" v-if="get_selected_color_room === 'kitchen'">
+    <h4 class="pl-4 py-2" v-if="get_selected_color_type === 'r' && get_selected_color_room === 'kitchen'">キッチン天板</h4>
+    <div class="d-flex flex-wrap px-4" v-if="get_selected_color_type === 'r' && get_selected_color_room === 'kitchen'">
       <div class="chip-wrapper" v-for="(item, index) in kitchen_desks" :key="item+index">
         <div class="ww100per d-flex flex-column align-center">
           <p class="mb-1 xxsm--txt text-capitalize">{{item.color}}</p>
@@ -82,7 +100,7 @@ export default {
       rooms: [
         {val: "living_room", txt: "リビングルーム"},
         {val: "kitchen", txt: "キッチン"},
-        {val: "entrance", txt: "エントランス"},
+        // {val: "entrance", txt: "エントランス"},
       ],
       base_colors_n:[
         {color:"dark", hex:"#3C1616"},
@@ -96,7 +114,18 @@ export default {
         {color:"grayish", hex:"#B6ACB0"},
         {color:"white", hex:"#F5F5F5"},
       ],
-      kitchen_bars:[
+      kitchen_bars_n:[
+        {color:"dark", hex:"#3C1616"},
+        {color:"medium", hex:"#7D544E"},
+        {color:"grayish", hex:"#B6ACB0"},
+        {color:"natural", hex:"#855935"},
+        {color:"winered", hex:"#5b252c"},
+        {color:"pearlwhite", hex:"#F5DEB3"},
+        {color:"blue", hex:"#212180"},
+        {color:"brownstone", hex:"#5b4f4c"},
+        {color:"greige", hex:"#D1CFC2"},
+      ],
+      kitchen_bars_r:[
         {color:"dark", hex:"#3C1616"},
         {color:"medium", hex:"#7D544E"},
         {color:"grayish", hex:"#B6ACB0"},
@@ -142,8 +171,16 @@ export default {
         this.$store.dispatch("UPDATE_DESK_COLOR_ACTION", color)
     },
     changeTypeNdRoom(part, value){
-      if (part === "type")
+      if (part === "type") {
+        this.$store.dispatch("UPDATE_BASE_COLOR_ACTION", 'dark')
+        if (value === 'n' && this.get_selected_kitchen_bar_color === 'white') {
+          this.$store.dispatch("UPDATE_BAR_COLOR_ACTION", 'natural')
+        }
+        else if (value === 'r' && this.get_selected_kitchen_bar_color === 'natural') {
+          this.$store.dispatch("UPDATE_BAR_COLOR_ACTION", 'white')
+        }
         this.$store.dispatch("UPDATE_TYPE_ACTION", value)
+      }
       else
         this.$store.dispatch("UPDATE_ROOM_ACTION", value)
     }
@@ -155,6 +192,10 @@ export default {
 <style>
 h4 {
   text-align: left;
+}
+.chg-btn.active {
+  background-color: #32323a !important;
+  color: #df9100;
 }
 .color__side .chip-wrapper {
   width: 25%;

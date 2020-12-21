@@ -1,7 +1,7 @@
 <template>
-  <v-sheet class="wh100 gallery text-center d-flex flex-column justify-space-between" v-if="get_project != null">
+  <v-sheet class="gallery text-center d-flex flex-column justify-space-between" v-if="get_project != null">
     <v-img class="selected--image" :src="DIR+get_project.gallery[selected_index].image"></v-img>
-    <carousel :scrollPerPage="true" :perPageCustom="[[480, 2],[768, 3],[1024, 4]]">
+    <carousel :scrollPerPage="true" :perPageCustom="[[480, 2],[768, 3],[1024, 4]]" :class="{minH:ipad}">
       <slide v-for="(item, index) in get_project.gallery" :key="index">
         <v-img style="width: 200px; max-width: 100%;" class="mx-auto" :src="DIR+item.image" @click="selected_index = index"></v-img>
       </slide>
@@ -20,9 +20,16 @@ export default {
   mixins:[basicMixin],
   data() {
     return {
+      ipad:false,
       DIRR: process.env.VUE_APP_MEDIA_URL,
       selected_index: 0,
       selected_image: null
+    }
+  },
+  mounted(){
+    const navigator = window.navigator;
+    if ((navigator.userAgent.match(/Mac/) && navigator.maxTouchPoints && navigator.maxTouchPoints > 2) || navigator.userAgent.match("iPad")) {
+      this.ipad = true
     }
   },
   watch: {
@@ -58,5 +65,8 @@ export default {
 }
 .VueCarousel-pagination {
   display: none !important;
+}
+.minH {
+  min-height: 260px;
 }
 </style>

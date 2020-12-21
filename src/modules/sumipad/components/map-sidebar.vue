@@ -1,5 +1,5 @@
 <template>
-  <v-navigation-drawer permanent min-width="300px" width="300px" class="side__nav" touchless>   
+  <v-navigation-drawer permanent min-width="300px" width="300px" class="side__nav" :class="{specH: ipad}" touchless>
     <div class="map--filters d-flex align-center justify-end">
       <a :href="'https://maps.google.com/?q='+get_project.lat+','+get_project.lng" target="_blank" class="to-google">in google <i class="fas fa-chevron-right"></i></a>     
     </div>
@@ -63,6 +63,7 @@ import { mapGetters } from "vuex";
 export default {
   data () {
     return {
+      ipad: false,
       locations: ["教育施設", "金融機関", "医療施設", "公共・文化施設", "公園・その他", "ショッピング施設",],
     }
   },
@@ -74,6 +75,13 @@ export default {
       "get_default_markers",
       "get_selected_places"
     ]),    
+  },
+  mounted(){
+    const navigator = window.navigator;
+    if ((navigator.userAgent.match(/Mac/) && navigator.maxTouchPoints && navigator.maxTouchPoints > 2) || navigator.userAgent.match("iPad")) {
+      this.ipad = true
+    }
+
   },
   methods: {
     filterMarkers(array){

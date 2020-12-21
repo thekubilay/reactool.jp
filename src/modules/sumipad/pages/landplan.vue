@@ -1,5 +1,5 @@
 <template>
-  <v-sheet width="100%" color="#f5f6fa" class="d-flex align-center jusitfy-center wh100" v-if="get_project_load == 2">
+  <v-sheet width="100%" color="#f5f6fa" class="d-flex align-center jusitfy-center" v-if="get_project_load == 2">
     <v-dialog v-model="dialog" fullscreen hide-overlay transition="dialog-bottom-transition">
       <v-card tile flat>
         <v-toolbar dark color="#2323a2d" min-height="40px" height="40px" class="fixed">

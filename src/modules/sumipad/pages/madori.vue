@@ -1,5 +1,5 @@
 <template>
-  <v-sheet width="100%" class="wh100" color="#fdfdfd" v-if="get_project_load == 2">
+  <v-sheet width="100%" color="#fdfdfd" v-if="get_project_load == 2">
       <v-container class="d-flex justify-space-between align-center">
         <h3 class="black--text ml-3">一覧</h3>
         <div class="filter__wrapper d-flex pa-2 rounded-lg">

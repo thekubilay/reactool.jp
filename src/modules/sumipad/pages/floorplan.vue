@@ -1,5 +1,5 @@
 <template>
-  <v-sheet width="100%" color="#f5f6fa" class="scrollable d-flex align-center jusitfy-center wh100" v-if="get_project_load == 2">
+  <v-sheet width="100%" color="#f5f6fa" class="scrollable d-flex align-center jusitfy-center" v-if="get_project_load == 2">
     <div v-if="get_project.floor_plans.length" class="d-flex align-center jusitfy-center flex-wrap ww100per hw100per">
       <v-dialog v-model="dialog" fullscreen hide-overlay transition="dialog-bottom-transition">
         <v-card tile flat>

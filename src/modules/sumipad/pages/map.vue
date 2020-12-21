@@ -1,5 +1,5 @@
 <template>
-  <v-sheet class="d-flex wh100" v-if="get_project_load == 2">
+  <v-sheet class="d-flex" v-if="get_project_load == 2">
     <navigation-drawer></navigation-drawer>
     <gmap></gmap>
   </v-sheet>

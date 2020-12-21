@@ -1,10 +1,12 @@
 <template>
-  <v-sheet v-pan="onPan" width="ww100" class="noselect d-flex align-center wh100 pan" v-if="get_project_load == 2">
-    <!-- <p class="compass">{{compass}}</p> -->
+  <v-sheet width="ww100" class="noselect d-flex align-center pan" v-if="get_project_load === 2">
     <app-vista-controller />
-    <div class="slider__list" ref="list" :style="{ backgroundImage: 'url(' + DIR+vistas.image + ')' }"></div> 
+    <div class="slider__list"
+         ref="panorama" v-pan="compass"
+         :style="{ backgroundImage: 'url(' + DIR+vistas.image + ')' }">
+    </div>
     <button v-longclick="() => buttonLeft(-5)" class="left-btn"><i class="fas fa-chevron-left"></i></button>
-    <button v-longclick="() => buttonLeft(5)" class="right-btn"><i class="fas fa-chevron-right"></i></button>    
+    <button v-longclick="() => buttonLeft(5)" class="right-btn"><i class="fas fa-chevron-right"></i></button>
   </v-sheet>
 </template>
 <script>
@@ -12,6 +14,7 @@ import appVistaController from "../components/vista-controller"
 import {basicMixin} from '@/mixins/basicMixin'
 import { mapGetters } from 'vuex'
 import Vue from "vue"
+
 const longClickInstance = window['vue-long-click'].longClickDirective({delay: 0, interval: 120})
 Vue.directive('longclick', longClickInstance)
 export default {
@@ -22,9 +25,7 @@ export default {
     pan: {
       bind: function(el, binding) {
         if (typeof binding.value === "function") {
-          const mc = new Hammer(el);          
-          mc.options.domEvents = true
-          mc.options.preventDefault = true
+          const mc = new Hammer(el);
           mc.get("pan").set({ direction: Hammer.DIRECTION_ALL });
           mc.on("pan", binding.value);
         }
@@ -37,7 +38,6 @@ export default {
       position:0,
       compass_change: false,
       currentOffset: 0,
-      compass: "東",
       counter: 0,
       watchPos: null,
     }
@@ -55,121 +55,56 @@ export default {
       })
       return image[0]
     },
-		overflowRatio() {
-			return this.$refs.list.scrollWidth / this.$refs.list.offsetWidth;
-		},
-		itemWidth() {
-			return this.$refs.list.scrollWidth;
-		},
-		count() {
-			return 1
+    overflowRatio() {
+      return this.$refs.panorama.scrollWidth / this.$refs.panorama.offsetWidth;
+    },
+    itemWidth() {
+      return this.$refs.panorama.scrollWidth;
+    },
+    count() {
+      return 1
     },
   },
-  watch: {
-    position(oldpos, newpos){
-      if (newpos < oldpos) {
-        this.compassActionRight(newpos)
-      } else {
-        this.compassActionLeft(newpos)
-      }
-    }
-  },
+
 	methods: {
-    calculateOverAll(dragSpeed, itemWidth, deltaX, count, overflowRatio){
-      let dragOffset = dragSpeed / itemWidth * deltaX / count * overflowRatio
-      let transform = this.currentOffset + dragOffset;
-      this.$refs.list.style.setProperty("--x", transform);        
-      return transform
-    },
-		onPan(e) {
-      let dragSpeed = -22
-      let transform
-      if (parseInt(e.velocityX) > 1 || parseInt(e.velocityX) < -1) {
-        this.$refs.list.style.transition = "1s ease"
-        dragSpeed = -100
-        transform = this.calculateOverAll(dragSpeed, this.itemWidth, e.deltaX, this.count, this.overflowRatio)
-        // let style = getComputedStyle(this.$refs.list)
-        // let pos = parseInt(style.backgroundPosition.match(/.*?(?=p|$)/i)[0])
-        // if (e.isFinal) {
-        //   for (let i = 0; i < pos; i++) {
-        //     this.position += i
-        //   }          
-        // }
-      } else {
-        // def dragspeed -22
-        this.$refs.list.style.transition = "unset"
-        transform = this.calculateOverAll(dragSpeed, this.itemWidth, e.deltaX, this.count, this.overflowRatio)
-        // let style = getComputedStyle(this.$refs.list)
-        // let pos = parseInt(style.backgroundPosition.match(/.*?(?=p|$)/i)[0])
-        // this.position = pos
-      }
-      
 
-			if (e.isFinal) {
-				this.currentOffset = transform;
-				const maxScroll = 100 - this.overflowRatio * 100;
-				let finalOffset = this.currentOffset;
+    compass(e){
 
-				// scrolled to last item
-				if (this.currentOffset <= maxScroll) {
-					finalOffset = maxScroll;
-				} else if (this.currentOffset >= 0) {
-					// scroll to first item
-					finalOffset = 0;
-				} else {
-					// animate to next item according to pan direction
-					const index = this.currentOffset / this.overflowRatio / 100 * this.count;
-					const nextIndex = e.deltaX <= 0 ? Math.floor(index) : Math.ceil(index);
-					finalOffset = 100 * this.overflowRatio / this.count * nextIndex;
-				}
+      let drag = -44
+      let position
+      this.$refs.panorama.style.transition = "unset"
+
+      position = drag / this.itemWidth * e.deltaX / this.count * this.overflowRatio
+      position = parseInt(position)
+      position = this.currentOffset + position
+      this.$refs.panorama.style.setProperty("--x", position);
+
+      if (e.isFinal){
+        this.$refs.panorama.style.transition = "1s ease"
+        if (e.velocityX < -1 || e.velocityX > 1) {
+          let drag = -140
+          position = drag / this.itemWidth * e.deltaX / this.count * this.overflowRatio
+          position = position + this.currentOffset
+          this.$refs.panorama.style.setProperty("--x", position);
+          // console.log(position + " pos")
+        }
+        this.currentOffset = position
+        // console.log(this.currentOffset + " ofset")
       }
-    },
-    compassActionRight(position){
-      console.log(position)
-      const dirs = ["東", "南", "西", "北"]
-      if (position % 20 === 0) {
-        if (this.compass_change) {
-          if (this.counter < 3) {
-            this.counter+=1            
-          } else {
-            this.counter = 0
-          }
-          this.compass = dirs[this.counter]
-          this.compass_change = false
-        } 
-      } else {
-        this.compass_change = true
-      }  
-    },
-    compassActionLeft(position){
-      const dirs = ["東", "南", "西", "北"]
-      if (position % 20 === 0) {
-        if (this.compass_change) {
-          if (this.counter > 0) {
-            this.counter -= 1            
-          } else {
-            this.counter = 3
-          }
-          this.compass = dirs[this.counter]
-          this.compass_change = false
-        } 
-      } else {
-        this.compass_change = true
-      }      
     },
     buttonLeft(pos){
-      let style = getComputedStyle(this.$refs.list)
+      let style = getComputedStyle(this.$refs.panorama)
       this.position = parseFloat(style.backgroundPosition.match(/.*?(?=p|$)/i)[0])
       this.position = this.position + pos
-      this.$refs.list.style.transition = "1s ease"
-			this.$refs.list.style.setProperty("--x", this.position);
+      this.$refs.panorama.style.transition = "1s ease"
+      this.$refs.panorama.style.setProperty("--x", this.position);
     },
     buttonRight(pos){
-      let style = getComputedStyle(this.$refs.list)
+      let style = getComputedStyle(this.$refs.panorama)
       this.position = parseFloat(style.backgroundPosition.match(/.*?(?=p|$)/i)[0])
       this.position = this.position + pos
-      this.$refs.list.style.transition = "1s ease"
-			this.$refs.list.style.setProperty("--x", this.position);    
+      this.$refs.panorama.style.transition = "1s ease"
+      this.$refs.panorama.style.setProperty("--x", this.position);
     },
 	}
 }

@@ -1,5 +1,5 @@
 <template>
-  <v-sheet class="pb-14" height="100vh" width="100%" color="#f5f6fa"  v-if="get_project != null">
+  <v-sheet class="pb-14" width="100%" color="#f5f6fa"  v-if="get_project != null">
     <ul class="files d-flex flex-wrap scrollable">
       <li class="files-file" v-for="(item, index) in pdfChecker(get_project.documents)" :key="index">
         <a :href="DIR+item.pdf" target="_blank">

@@ -1,5 +1,5 @@
 <template>
-  <v-sheet height="100vh" color="#f5f6fa" class="d-flex align-center justify-center pb-14">
+  <v-sheet color="#f5f6fa" class="d-flex align-center justify-center pb-14">
     <v-card width="100%" max-width="900px" height="600px" max-height="600px">
       <div class="result__wrapper align-center px-10">
         <h2 class="vw100 font-weight-regular align-center justify-space-around">
@@ -130,6 +130,7 @@ export default {
     }
   },
   mounted(){
+
     this.reCalcurateM(this.sliders)
     if (this.get_selected_room != null && this.get_selected_room.price != null){
       let index = ""

@@ -1,5 +1,5 @@
 <template>
-  <v-sheet class="d-flex wh100">
+  <v-sheet class="d-flex">
     <navigation-drawer></navigation-drawer>
     <router-view></router-view>
   </v-sheet>

@@ -1,12 +1,14 @@
 <template>
-  <v-bottom-navigation flat color="#2f3542" absolute height="90px" grow>
-    <v-btn height="100%" class="not--active pb-4" v-for="(item, index) in routes" :key="index" :to="{name:item.route}" :exact="true" exact-active-class="--active font-weight-bold">
+  <v-bottom-navigation flat color="#2f3542" absolute height="90px" class="bottomnav" grow v-if="get_project !== null">
+    <v-btn height="100%" class="not--active pb-4" v-for="(item, index) in filterRoutes(routes)" :key="index" :to="{name:item.route}" :exact="true" exact-active-class="--active font-weight-bold">
       <span>{{item.name}}</span>
       <v-icon class="mx-0">{{item.icon}}</v-icon>
     </v-btn>
   </v-bottom-navigation>
 </template>
 <script>
+import {mapGetters} from "vuex";
+
 export default {
   data(){
     return {
@@ -59,9 +61,28 @@ export default {
       ]
     }
   },
+  computed:{
+    ...mapGetters([
+        "get_project"
+    ])
+  },
+  methods:{
+    filterRoutes(routes){
+      return routes.filter(item => {
+        if (this.get_project.project_path === 'branneed_nagai') {
+          return item.route === 'home' || item.route === 'vistas'
+        } else {
+          return item
+        }
+      })
+    }
+  }
 }
 </script>
 <style scoped>
+.bottomnav {
+  z-index: 999;
+}
 .v-item-group.v-bottom-navigation {
   box-shadow: none;
 }  

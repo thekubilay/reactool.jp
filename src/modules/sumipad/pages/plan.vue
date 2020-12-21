@@ -1,5 +1,5 @@
 <template>
-  <v-sheet class="wh100" width="100%" color="#fdfdfd" v-if="get_project_load == 2">
+  <v-sheet width="100%" color="#fdfdfd" v-if="get_project_load === 2">
     <v-dialog v-model="dialog" fullscreen hide-overlay transition="dialog-bottom-transition" class="pa-15">
       <v-card tile flat class="text-center">
         <v-toolbar dark color="#2323a2d" min-height="40px" height="40px" class="fixed">
@@ -34,7 +34,7 @@
       </div>
     </v-container>
 
-    <v-container class="d-flex plan__wrapper" :class="{'justify-center': compare_detail == null}">
+    <v-container class="d-flex plan__wrapper" :class="{'justify-center': compare_detail == null, padBot:ipad}">
       <div class="detail__content__wrapper d-flex flex-column align-center justify-center hw100per" v-if="plan_detail != null">
         <img :src="DIR+plan_detail.image" @click="setImage(plan_detail.image)">
         <v-card color="#f1f2f6" class="d-flex py-2 px-4 plan-card ma-0" >      
@@ -97,6 +97,7 @@
     mixins: [basicMixin],
     data() {
       return {
+        ipad:false,
         dialog:false,
         image:null,
         selected_compare: null,
@@ -107,6 +108,10 @@
       }
     },
     mounted(){
+      const navigator = window.navigator;
+      if ((navigator.userAgent.match(/Mac/) && navigator.maxTouchPoints && navigator.maxTouchPoints > 2) || navigator.userAgent.match("iPad")) {
+        this.ipad = true
+      }
       if (this.get_project != null) {
         this.findPlan()
         this.findCompares()
@@ -180,6 +185,9 @@
   }
 </script>
 <style>
+.padBot {
+  padding-bottom: 90px !important;
+}
 img.dialog--img {
   width: 90%;
   padding: 75px;

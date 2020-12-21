@@ -1,5 +1,5 @@
 <template>
-  <v-carousel hide-delimiters class="wh100" :continuous="true" :cycle="true" :interval="3500" :touch="{ left: () => activeSlide--,right: () => activeSlide++}" v-if="get_project_load == 2">    
+  <v-carousel hide-delimiters :continuous="true" :cycle="true" :interval="3500" :touch="{ left: () => activeSlide--,right: () => activeSlide++}" v-if="get_project_load == 2">
     <v-carousel-item
       class="carousel"
       v-for="(item,i) in get_project.slideshows"
